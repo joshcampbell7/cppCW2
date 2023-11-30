@@ -14,4 +14,5 @@ add_executable(cppCW2 main.cpp
         Objective.cpp
         Room.cpp
         jsonParser.cpp
+        jsonParser.h
 )

@@ -11,7 +11,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-int jsonParser() {
+void jsonParser() {
     try {
         ifstream fin("C:\\Users\\joshu\\OneDrive\\Documents\\University\\3rd year coding\\C++\\CW2\\map1.json");
         json j;
@@ -38,5 +38,4 @@ int jsonParser() {
     } catch (exception e) {
         cout << "fail";
     }
-    return 0;
 }
