@@ -8,3 +8,8 @@
 #endif //CPPCW2_JSONPARSER_H
 
 void jsonParser();
+map<string,Room> getRooms();
+map<string,Object> getObjects();
+map<string,Objective> getObjectives();
+map<string,Enemy> getEnemies();
+string getInitialRoom();

@@ -14,6 +14,6 @@ int main() {
     std::cout << objective.getRoomId() << objective.getObjectiveId() << std::endl;
 
     jsonParser();
-
+    cout << getInitialRoom();
     return 0;
 }
