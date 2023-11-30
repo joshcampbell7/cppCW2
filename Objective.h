@@ -12,15 +12,15 @@ using namespace std;
 class Objective{
 public:
 
-    Objective(const string &objectiveId_, const string &roomId_, const vector<string> &what_);
+    Objective(const string &objectiveId_, const string &type_, const vector<string> &what_);
 
     string getObjectiveId() const;
-    string getRoomId() const;
+    string getType() const;
     vector<string> getWhat() const;
 
 private:
     string objectiveId_;
-    string roomId_;
+    string type_;
     vector<string> what_;
 
 };

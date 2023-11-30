@@ -4,7 +4,12 @@
 
 #ifndef CPPCW2_JSONPARSER_H
 #define CPPCW2_JSONPARSER_H
-
+#include <map>
+#include "Objective.h"
+#include "Enemy.h"
+#include "Room.h"
+#include "Object.h"
+#include "Player.h"
 #endif //CPPCW2_JSONPARSER_H
 
 void jsonParser();

@@ -5,7 +5,7 @@
 #include "Player.h"
 
 Player::Player(const string &playerId, const string &playerName, const string &initialRoomId) : playerId(playerId), playerName(playerName),
-                                                                                                initialRoomId(initialRoomId), health(100), objects({}) {}
+                                                initialRoomId(initialRoomId), health(100), objects({}) {}
 
 string Player::getPlayerId() const {
     return playerId;
@@ -26,3 +26,4 @@ int Player::getHealth() const {
 vector<string> Player::getObjects() const {
     return objects;
 }
+
