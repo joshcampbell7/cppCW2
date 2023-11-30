@@ -15,8 +15,9 @@ using namespace std;
 class Enemy {
 
 public:
-    Enemy(string enemyId, string description, int aggressiveness, string initialRoom, vector<string> killedBy,
-          int health);
+
+    Enemy(string enemyName, string enemyId, string description, int aggressiveness, string initialRoom,
+          vector<string> killedBy, int health);
 
     const string &getEnemyName() const;
 
@@ -34,7 +35,7 @@ public:
 
     void setHealth(int health);
 
-protected:
+private:
     string enemyName_;
     string enemyId_;
     string description_;

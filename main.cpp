@@ -1,16 +1,19 @@
 #include <iostream>
-#include "Room.h"
-#include "Object.h"
+#include <fstream>
+#include "Objective.h"
 #include "Enemy.h"
-#include <vector>
+#include "json.hpp"
 #include <map>
+#include "jsonParser.cpp"
 using namespace std;
+using json = nlohmann::json;
 
 int main() {
-    vector<string> x;
-    Object table("table1","made of wood", "room1",0);
-    Enemy zombie("enemy1", "will kill you", 100, "room1", x, 50);
-    cout << table.getDescription() << endl;
-    cout << zombie.getDescription() << endl;
+    vector<string> test;
+    Objective objective = Objective("testId","This is a test description",test);
+    std::cout << objective.getRoomId() << objective.getObjectiveId() << std::endl;
+
+    jsonParser();
+
     return 0;
 }

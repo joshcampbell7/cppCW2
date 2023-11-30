@@ -12,4 +12,6 @@ add_executable(cppCW2 main.cpp
         Room.h
         Player.h
         Objective.cpp
-        Room.cpp)
+        Room.cpp
+        jsonParser.cpp
+)

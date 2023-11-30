@@ -9,7 +9,8 @@
 #include <vector>
 using namespace std;
 
-Enemy::Enemy(string enemyId, string description, int aggressiveness, string initialRoom, vector<string> killedBy, int health) {
+Enemy::Enemy(string enemyName, string enemyId, string description, int aggressiveness, string initialRoom, vector<string> killedBy, int health) {
+    enemyName_ = enemyId;
     enemyId_ = enemyId;
     description_ = description;
     aggressiveness_ = aggressiveness;
