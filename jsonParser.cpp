@@ -11,7 +11,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-int main() {
+int jsonParser() {
     try {
         ifstream fin("C:\\Users\\joshu\\OneDrive\\Documents\\University\\3rd year coding\\C++\\CW2\\map1.json");
         json j;
