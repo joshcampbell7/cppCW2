@@ -12,7 +12,7 @@ using namespace std;
 class Object {
 
 public:
-    Object(string objectId, string description, string initialRoom, int damage);
+    Object(string objectId, string description, string initialRoom, int damage,string objectName);
 
     const string &getObjectName() const;
 
