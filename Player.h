@@ -11,22 +11,26 @@ using namespace std;
 class Player{
 public:
 
-    Player(const string &playerId, const string &playerName, const string &initialRoomId);
+    Player(const string &playerId, const string &playerName, const string &currentRoomId);
 
     string getPlayerId() const;
 
     string getPlayerName() const;
 
-    string getInitialRoomId() const;
+    string getCurrentRoomId() const;
 
     int getHealth() const;
 
     vector<string> getObjects() const;
 
+    void setCurrentRoom(string roomId);
+
+    void setName(string name);
+
 private:
     string playerId;
     string playerName;
-    string initialRoomId;
+    string currentRoomId;
     int health;
     vector<string> objects;
 

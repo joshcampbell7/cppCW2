@@ -5,17 +5,17 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(cppCW2 main.cpp
         Object.h
+        Object.cpp
         Enemy.h
         Enemy.cpp
-        Object.cpp
         Objective.h
-        Room.h
-        Player.h
         Objective.cpp
+        Room.h
         Room.cpp
-        jsonParser.cpp
-        jsonParser.h
-        MainEngine.cpp
-        MainEngine.h
+        Player.h
         Player.cpp
+        jsonParser.h
+        jsonParser.cpp
+        MainEngine.h
+        MainEngine.cpp
 )

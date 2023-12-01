@@ -43,23 +43,28 @@ void jsonParser() {
             Enemies.insert({enemy1.getEnemyId(),enemy1});
             enemyId++;
         }
+        map<string,vector<string>> objects;
         for (const auto &room: j["rooms"]) {
-            Room room1 = Room(room["id"], room["desc"],room["exits"]);
-            Rooms.insert({room1.getRoomId(),room1});
+            vector<string> theObjects;
+            objects[room["id"]] = theObjects;
         }
         int objectId=1;
         for (const auto &object: j["objects"]) {
             Object object1 = Object("object"+to_string(objectId), object["desc"],object["initialroom"],0);
             Objects.insert({object1.getObjectId(),object1});
+            string initroom = object["initialroom"];
+            objects.at(initroom).push_back("object"+to_string(objectId));
             objectId++;
+        }
+        for (const auto &room: j["rooms"]) {
+            Room room1 = Room(room["id"], room["desc"],room["exits"],objects.at(room["id"]));
+            Rooms.insert({room1.getRoomId(),room1});
         }
         Objective objective1 = Objective("objective1",j["objective"]["type"],j["objective"]["what"]);
         Objectives.insert({objective1.getObjectiveId(),objective1});
         initialroom= j["player"]["initialroom"];
-
-
     } catch (exception e) {
-        cout << "fail";
+        cout << e.what();
     }
 }
 
