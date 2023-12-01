@@ -11,9 +11,7 @@
 #include "jsonParser.h"
 using namespace std;
 
-bool newRoom = true;
-
-string goMethod(const vector<string> &command, Player &player) {
+string goMethod(const vector<string> &command, Player &player, bool &newRoom) {
     if (getRooms().at(player.getCurrentRoomId()).getExits().count(command.at(1))) {
         player.setCurrentRoom(getRooms().at(player.getCurrentRoomId()).getExits().at(command.at(1)));
         newRoom = true;
@@ -23,11 +21,11 @@ string goMethod(const vector<string> &command, Player &player) {
     return "Please enter a valid direction.";
 }
 
-string takeMethod(const vector<string> &command, const Player &player) {
+string takeMethod(const vector<string> &command, Player &player) {
     return "This is the take method.";
 }
 
-string lookMethod(const vector<string> &command, const Player &player) {
+string lookMethod(const vector<string> &command, Player &player) {
     for (auto &objectName: getRooms().at(player.getCurrentRoomId()).getObjects()) {
         Object object = getObjects().at(objectName);
         if (command.at(1) == object.getObjectName()) {
@@ -37,11 +35,11 @@ string lookMethod(const vector<string> &command, const Player &player) {
     return "That object is not in this room...";
 }
 
-string fightMethod(const vector<string> &command, const Player &player) {
+string fightMethod(const vector<string> &command, Player &player) {
     return "This is the fight method.";
 }
 
-string moveHandler(const Player &player) {
+string moveHandler(Player &player) {
     //enum and map set up to facilitate use of switch case statements as they can't handle strings
     enum moveCode {
         mGo, mTake, mLook, mFight
@@ -52,6 +50,7 @@ string moveHandler(const Player &player) {
                                {"fight", mFight}};
 
     cout << "\nYou have 4 input command options: go, look, take, fight." << endl;
+    bool newRoom = true;
     while (!getObjectives().at("objective1").getWhat().empty()) {
         if (newRoom) {
             cout << "\nYou are currently in " + player.getCurrentRoomId() + ". " +
@@ -78,8 +77,7 @@ string moveHandler(const Player &player) {
         //runs relevant method for given input
         switch (m.at(command.at(0))) {
             case mGo:
-                cout << goMethod(command, player) << endl;
-                newRoom = true;
+                cout << goMethod(command, player, newRoom) << endl;
                 break;
             case mTake:
                 cout << takeMethod(command, player) << endl;
