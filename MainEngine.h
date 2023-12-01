@@ -6,11 +6,13 @@
 #define CPPCW2_MAINENGINE_H
 
 #endif //CPPCW2_MAINENGINE_H
+#include <vector>
+#include "Player.h"
 using namespace std;
 
-string goMethod();
-string takeMethod();
-string lookMethod();
-string fightMethod();
-string moveHandler();
+string goMethod(const vector<string> &command, Player &player);
+string takeMethod(const vector<string> &command, Player &player);
+string lookMethod(const vector<string> &command, Player &player);
+string fightMethod(const vector<string> &command, Player &player);
+string moveHandler(const vector<string> &command, Player &player);
 void mainEngine();
