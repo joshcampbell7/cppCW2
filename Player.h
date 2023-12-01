@@ -10,35 +10,28 @@ using namespace std;
 
 class Player{
 public:
-    Player(const string &playerId, const string &playerName, const string &initialRoomId, int health,
-           const vector<string> &objects) : playerId(playerId), playerName(playerName), initialRoomId(initialRoomId),
-                                            health(health), objects(objects) {}
 
-    const string &getPlayerId() const {
-        return playerId;
-    }
+    Player(const string &playerId, const string &playerName, const string &currentRoomId);
 
-    const string &getPlayerName() const {
-        return playerName;
-    }
+    string getPlayerId() const;
 
-    const string &getInitialRoomId() const {
-        return initialRoomId;
-    }
+    string getPlayerName() const;
 
-    int getHealth() const {
-        return health;
-    }
+    string getCurrentRoomId() const;
 
-    const vector<string> &getObjects() const {
-        return objects;
-    }
+    int getHealth() const;
+
+    vector<string> getObjects() const;
+
+    void setCurrentRoom(string roomId);
+
+    void setName(string name);
 
 private:
     string playerId;
     string playerName;
-    string initialRoomId;
-    int health = 100;
+    string currentRoomId;
+    int health;
     vector<string> objects;
 
 
