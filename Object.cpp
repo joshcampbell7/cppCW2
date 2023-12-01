@@ -7,11 +7,12 @@
 #include <string>
 using namespace std;
 
-Object::Object(string objectId, string description, string initialRoom, int damage) {
+Object::Object(string objectId, string description, string initialRoom, int damage,string objectName) {
     objectId_ = objectId;
     description_ = description;
     initialRoom_ = initialRoom;
     damage_ = damage;
+    objectName_ = objectName;
 }
 
 const string &Object::getObjectName() const {
