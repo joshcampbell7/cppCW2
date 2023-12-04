@@ -9,6 +9,7 @@
 #include "MainEngine.h"
 #include "Player.h"
 #include "jsonParser.h"
+
 using namespace std;
 
 string goMethod(const vector<string> &command, Player &player, bool &newRoom) {
@@ -26,7 +27,8 @@ string takeMethod(const vector<string> &command, Player &player) {
 }
 
 string lookMethod(const vector<string> &command, Player &player) {
-    for (auto &objectName: getRooms().at(player.getCurrentRoomId()).getObjects()) {
+    vector<string> objectsInRoom = getRooms().at(player.getCurrentRoomId()).getObjects();
+    for (auto &objectName: objectsInRoom) {
         Object object = getObjects().at(objectName);
         if (command.at(1) == object.getObjectName()) {
             return object.getDescription() + " Be sure to take it first though...";
