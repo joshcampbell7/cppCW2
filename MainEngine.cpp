@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <string>
 #include "MainEngine.h"
 #include "Player.h"
 #include "jsonParser.h"
@@ -38,6 +39,18 @@ string lookMethod(const vector<string> &command, Player &player) {
 }
 
 string fightMethod(const vector<string> &command, Player &player) {
+    const int damage = 10;
+    if (command.size() > 1) {
+        auto findEnemy = std::find(getRooms().at(player.getCurrentRoomId()).getEnemies().begin(), getRooms().at(player.getCurrentRoomId()).getEnemies().end(), command.at(1));
+        if (findEnemy != getRooms().at(player.getCurrentRoomId()).getEnemies().end()) {
+            if (command.size() > 2) {
+                auto findObject = std::find(player.getObjects().begin(), player.getObjects().end(), command.at(2));
+                if (findObject != player.getObjects().end()) {
+                    for (Enemy i : )
+                }
+            }
+        }
+    }
     return "This is the fight method.";
 }
 

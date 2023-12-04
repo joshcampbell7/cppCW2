@@ -5,9 +5,10 @@
 #include "Object.h"
 #include "Room.h"
 #include <string>
+
 using namespace std;
 
-Object::Object(string objectId, string description, string initialRoom, int damage,string objectName) {
+Object::Object(string objectId, string description, string initialRoom, int damage, string objectName) {
     objectId_ = objectId;
     description_ = description;
     initialRoom_ = initialRoom;

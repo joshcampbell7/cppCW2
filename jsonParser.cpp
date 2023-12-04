@@ -17,10 +17,10 @@
 using namespace std;
 using json = nlohmann::json;
 
-map<string,Enemy> Enemies;
-map<string,Room> Rooms;
-map<string,Object> Objects;
-map<string,Objective> Objectives;
+map<string, Enemy> Enemies;
+map<string, Room> Rooms;
+map<string, Object> Objects;
+map<string, Objective> Objectives;
 string initialroom;
 
 void jsonParser() {
@@ -35,50 +35,59 @@ void jsonParser() {
         for (auto e: j.items()) {
             string s = e.key();
         }
-        map<string,any> allObjects;
-        int enemyId=1;
-        for (const auto &enemy: j["enemies"]) {
-            Enemy enemy1 = Enemy("Zombie", "enemy"+to_string(enemyId), enemy["desc"], enemy["aggressiveness"], enemy["initialroom"],
-                                 enemy["killedby"], 100);
-            Enemies.insert({enemy1.getEnemyId(),enemy1});
-            enemyId++;
-        }
-        map<string,vector<string>> objects;
+        int enemyId = 1;
+        map<string, vector<string>> enemies;
+        map<string, vector<string>> objects;
         for (const auto &room: j["rooms"]) {
             vector<string> theObjects;
             objects[room["id"]] = theObjects;
+            vector<string> theEnemies;
+            enemies[room["id"]] = theEnemies;
         }
-        int objectId=1;
+        for (const auto &enemy: j["enemies"]) {
+            Enemy enemy1 = Enemy("Zombie", "enemy" + to_string(enemyId), enemy["desc"], enemy["aggressiveness"],
+                                 enemy["initialroom"],
+                                 enemy["killedby"], 100);
+            Enemies.insert({enemy1.getEnemyId(), enemy1});
+            enemies.at(enemy1.getInitialRoom()).push_back(enemy1.getEnemyName());
+            enemyId++;
+        }
+        int objectId = 1;
         for (const auto &object: j["objects"]) {
-            Object object1 = Object("object"+to_string(objectId), object["desc"],object["initialroom"],0,object["id"]);
-            Objects.insert({object1.getObjectId(),object1});
-            objects.at(object["initialroom"]).push_back("object"+to_string(objectId));
+            Object object1 = Object("object" + to_string(objectId), object["desc"], object["initialroom"], 20,
+                                    object["id"]);
+            Objects.insert({object1.getObjectId(), object1});
+            objects.at(object["initialroom"]).push_back("object" + to_string(objectId));
             objectId++;
         }
         for (const auto &room: j["rooms"]) {
-            Room room1 = Room(room["id"], room["desc"],room["exits"],objects.at(room["id"]));
-            Rooms.insert({room1.getRoomId(),room1});
+            Room room1 = Room(room["id"], room["desc"], room["exits"], objects.at(room["id"]), enemies.at(room["id"]));
+            Rooms.insert({room1.getRoomId(), room1});
         }
-        Objective objective1 = Objective("objective1",j["objective"]["type"],j["objective"]["what"]);
-        Objectives.insert({objective1.getObjectiveId(),objective1});
-        initialroom= j["player"]["initialroom"];
+        Objective objective1 = Objective("objective1", j["objective"]["type"], j["objective"]["what"]);
+        Objectives.insert({objective1.getObjectiveId(), objective1});
+        initialroom = j["player"]["initialroom"];
     } catch (exception e) {
         cout << e.what();
     }
 }
 
-map<string,Object> getObjects(){
+map<string, Object> getObjects() {
     return Objects;
 }
-map<string,Room> getRooms(){
+
+map<string, Room> getRooms() {
     return Rooms;
 }
-map<string,Enemy> getEnemies(){
+
+map<string, Enemy> getEnemies() {
     return Enemies;
 }
-map<string,Objective> getObjectives(){
+
+map<string, Objective> getObjectives() {
     return Objectives;
 }
-string getInitialRoom(){
+
+string getInitialRoom() {
     return initialroom;
 }
