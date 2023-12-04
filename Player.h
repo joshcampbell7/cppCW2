@@ -1,30 +1,23 @@
-//
-// Created by joshu on 29/11/2023.
-//
+// Player.h
+
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include <string>
 #include <vector>
 
 using namespace std;
-#ifndef CPPCW2_PLAYER_H
-#define CPPCW2_PLAYER_H
 
-class Player{
+class Player {
 public:
-
-    Player(const string &playerId, const string &playerName, const string &currentRoomId);
+    Player(const string& playerId, const string& playerName, const string& currentRoomId);
 
     string getPlayerId() const;
-
     string getPlayerName() const;
-
     string getCurrentRoomId() const;
-
     int getHealth() const;
-
-    vector<string> getObjects() const;
-
+    vector<string>& getObjects();  // Corrected to return a reference.
     void setCurrentRoom(string roomId);
-
     void setName(string name);
 
 private:
@@ -34,7 +27,6 @@ private:
     int health;
     vector<string> objects;
 
-
 };
 
-#endif //CPPCW2_PLAYER_H
+#endif // PLAYER_H

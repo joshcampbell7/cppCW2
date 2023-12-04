@@ -23,7 +23,24 @@ string goMethod(const vector<string> &command, Player &player, bool &newRoom) {
 }
 
 string takeMethod(const vector<string> &command, Player &player) {
-    return "This is the take method.";
+    vector<string>& objectsInRoom = getRooms().at(player.getCurrentRoomId()).getObjects();
+    cout<<"items in room before erase: " << (getRooms().at(player.getCurrentRoomId()).getObjects().size()) << endl;
+    for (auto it = getRooms().at(player.getCurrentRoomId()).getObjects().begin(); it != getRooms().at(player.getCurrentRoomId()).getObjects().end(); ++it) {
+        const string& objectName = *it;
+        Object object = getObjects().at(objectName);
+
+        if (command.at(1) == object.getObjectName()) {
+            // Add the item to the player's objects
+            player.getObjects().push_back(command[1]);
+
+            // Remove the item from the room objects
+            objectsInRoom.erase(it);
+            cout<<"items in room after erase: " << (getRooms().at(player.getCurrentRoomId()).getObjects().size()) << endl;
+            return "Item added to inventory, size of inventory is now: " + to_string(player.getObjects().size());
+        }
+    }
+    //if it isn't then return "That item isn't in the room'
+    return "That item isn't in the room.";
 }
 
 string lookMethod(const vector<string> &command, Player &player) {
@@ -82,6 +99,10 @@ string moveHandler(Player &player) {
                 cout << goMethod(command, player, newRoom) << endl;
                 break;
             case mTake:
+                if (command.size() < 2) {
+                    cout << "Take what?" << endl;
+                    break;
+                }
                 cout << takeMethod(command, player) << endl;
                 break;
             case mLook:

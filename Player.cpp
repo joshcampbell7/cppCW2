@@ -4,8 +4,8 @@
 
 #include "Player.h"
 
-Player::Player(const string &playerId, const string &playerName, const string &currentRoomId) : playerId(playerId), playerName(playerName),
-                                                currentRoomId(currentRoomId), health(100), objects({}) {}
+Player::Player(const string& playerId, const string& playerName, const string& currentRoomId)
+        : playerId(playerId), playerName(playerName), currentRoomId(currentRoomId), health(100), objects({}) {}
 
 string Player::getPlayerId() const {
     return playerId;
@@ -23,7 +23,7 @@ int Player::getHealth() const {
     return health;
 }
 
-vector<string> Player::getObjects() const {
+vector<string>& Player::getObjects() {
     return objects;
 }
 
@@ -31,6 +31,6 @@ void Player::setCurrentRoom(string roomId) {
     currentRoomId = roomId;
 }
 
-void Player::setName(string name){
+void Player::setName(string name) {
     playerName = name;
 }

@@ -49,7 +49,7 @@ void jsonParser() {
             objects[room["id"]] = theObjects;
         }
         int objectId=1;
-        for (const auto &object: j["objects"]) {
+        for (auto &object: j["objects"]) {
             Object object1 = Object("object"+to_string(objectId), object["desc"],object["initialroom"],0,object["id"]);
             Objects.insert({object1.getObjectId(),object1});
             objects.at(object["initialroom"]).push_back("object"+to_string(objectId));

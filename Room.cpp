@@ -4,7 +4,7 @@
 
 #include "Room.h"
 
-Room::Room(const string &roomId, const string &description, const map<string, string> &exits, const vector<string> &objects) : roomId(roomId),
+Room::Room(const string &roomId, const string &description, const map<string, string> &exits, vector<string> &objects) : roomId(roomId),
                                                                                                 description(
                                                                                                         description),
                                                                                                 exits(exits),
@@ -22,6 +22,6 @@ const map<string, string> &Room::getExits() const {
     return exits;
 }
 
-const vector<string> &Room::getObjects() const {
+vector<string> &Room::getObjects()  {
     return objects;
 }

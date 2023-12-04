@@ -11,7 +11,7 @@ using namespace std;
 
 class Room{
 public:
-    Room(const string &roomId, const string &description, const map<string, string> &exits, const vector<string> &objects);
+    Room(const string &roomId, const string &description, const map<string, string> &exits, vector<string> &objects);
 
     const string &getRoomId() const;
 
@@ -19,7 +19,7 @@ public:
 
     const map<string, string> &getExits() const;
 
-    const vector<string> &getObjects() const;
+    vector<string> &getObjects();
 
 private:
     string roomId;
