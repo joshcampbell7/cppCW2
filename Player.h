@@ -16,7 +16,7 @@ public:
 
     explicit Player(Room &currentRoom);
 
-    Room getCurrentRoom() const;
+    Room& getCurrentRoom();
 
     int getHealth() const;
 

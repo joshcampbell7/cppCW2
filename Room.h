@@ -34,6 +34,8 @@ public:
 
     void removeEnemies(Enemy &enemy);
 
+    void setObjects(const vector<Object> &objects);
+
 private:
     string roomId;
     string description;

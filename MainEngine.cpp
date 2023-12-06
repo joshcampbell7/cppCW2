@@ -25,23 +25,20 @@ string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
 }
 
 string takeMethod(const vector<string> &command, Map &gameMap) {
-    vector<Object>& objectsInRoom = gameMap.getPlayer().getCurrentRoom().getObjects();
     cout<<"items in room before erase: " << gameMap.getPlayer().getCurrentRoom().getObjects().size() << endl;
-    for (auto it = gameMap.getPlayer().getCurrentRoom().getObjects().begin(); it != gameMap.getPlayer().getCurrentRoom().getObjects().end(); ++it) {
-        const auto& objectName = *it;
-        Object object = getObjects().at(objectName);
-
-        if (command.at(1) == object.getObjectName()) {
-            // Add the item to the player's objects
-            player.getObjects().push_back(command[1]);
-
-            // Remove the item from the room objects
-            objectsInRoom.erase(it);
-            cout<<"items in room after erase: " << (getRooms().at(player.getCurrentRoomId()).getObjects().size()) << endl;
-            return "Item added to inventory, size of inventory is now: " + to_string(player.getObjects().size());
+    vector<Object> objectsInRoom = gameMap.getPlayer().getCurrentRoom().getObjects();
+    for (Object object : objectsInRoom) {
+        if (object.getObjectName() == command.at(1)) {
+            gameMap.getPlayer().addObjects(object);
+            gameMap.getPlayer().getCurrentRoom().removeObjects(object);
+            objectsInRoom.erase(objectsInRoom.begin() + 0);
+            gameMap.getPlayer().getCurrentRoom().setObjects(objectsInRoom);
         }
+        cout<<"items in room after erase: " << gameMap.getPlayer().getCurrentRoom().getObjects().size() << endl;
+        cout<<"items in room after erase: " << objectsInRoom.size() << endl;
+        return "Item added to inventory, size of inventory is now: " + to_string(gameMap.getPlayer().getCurrentRoom().getObjects().size());
     }
-    //if it isn't then return "That item isn't in the room'
+    //if it isn't then return "That item isn't in the room"
     return "That item isn't in the room.";
 }
 
@@ -56,7 +53,8 @@ string lookMethod(const vector<string> &command, Map &gameMap) {
 }
 
 string killMethod(const vector<string> &command, Map &gameMap) {
-    return "This is the fight method.";
+
+    return "This is the kill method.";
 }
 
 void moveHandler(Map& gameMap) {

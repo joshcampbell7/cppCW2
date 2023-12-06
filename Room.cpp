@@ -2,9 +2,11 @@
 // Created by joshu on 29/11/2023.
 //
 
+#include <algorithm>
 #include "Room.h"
 #include "Object.h"
 #include "Enemy.h"
+using namespace std;
 
 Room::Room(const string &roomId, const string &description, map<string, string> &exits) : roomId(roomId),
                                                                                                 description(
@@ -40,13 +42,16 @@ void Room::addEnemies(Enemy& enemy) {
 }
 
 void Room::removeObjects(Object &object) {
-    for (Object i : objects) {
-        if (i==object) {
-
-        }
+    auto it = find(objects.begin(), objects.end(), object);
+    if (it != objects.end()) {
+        objects.erase(it);
     }
 }
 
 void Room::removeEnemies(Enemy &enemy) {
 
+}
+
+void Room::setObjects(const vector<Object> &newObjects) {
+    Room::objects = objects;
 }
