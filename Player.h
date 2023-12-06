@@ -1,40 +1,35 @@
 //
 // Created by joshu on 29/11/2023.
 //
-#include <string>
-#include <vector>
 
-using namespace std;
 #ifndef CPPCW2_PLAYER_H
 #define CPPCW2_PLAYER_H
+#include <string>
+#include <vector>
+#include "Object.h"
+#include "Room.h"
+
+using namespace std;
 
 class Player{
 public:
 
-    Player(const string &playerId, const string &playerName, const string &currentRoomId);
+    explicit Player(Room &currentRoom);
 
-    string getPlayerId() const;
-
-    string getPlayerName() const;
-
-    string getCurrentRoomId() const;
+    Room getCurrentRoom() const;
 
     int getHealth() const;
 
-    vector<string> getObjects() const;
+    vector<Object> getObjects() const;
 
-    void setCurrentRoom(string roomId);
+    void addObjects(Object &object);
 
-    void setName(string name);
+    void setCurrentRoom(Room &currentRoom);
 
 private:
-    string playerId;
-    string playerName;
-    string currentRoomId;
+    Room currentRoom;
     int health;
-    vector<string> objects;
-
-
+    vector<Object> objects;
 };
 
 #endif //CPPCW2_PLAYER_H

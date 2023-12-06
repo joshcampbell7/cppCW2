@@ -5,11 +5,13 @@
 #include "json.hpp"
 #include "jsonParser.h"
 #include "mainEngine.h"
+#include "Map.h"
+
 using namespace std;
 using json = nlohmann::json;
 
 int main() {
-    jsonParser();
-    mainEngine();
+    Map gameMap = jsonParser();
+    mainEngine(gameMap);
     return 0;
 }

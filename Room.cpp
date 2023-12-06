@@ -3,12 +3,13 @@
 //
 
 #include "Room.h"
+#include "Object.h"
+#include "Enemy.h"
 
-Room::Room(const string &roomId, const string &description, const map<string, string> &exits, const vector<string> &objects) : roomId(roomId),
+Room::Room(const string &roomId, const string &description, map<string, string> &exits) : roomId(roomId),
                                                                                                 description(
                                                                                                         description),
-                                                                                                exits(exits),
-                                                                                                objects(objects) {}
+                                                                                                exits(exits) {}
 
 const string &Room::getRoomId() const {
     return roomId;
@@ -22,6 +23,18 @@ const map<string, string> &Room::getExits() const {
     return exits;
 }
 
-const vector<string> &Room::getObjects() const {
+vector<Object> & Room::getObjects() {
     return objects;
+}
+
+const vector<Enemy> &Room::getEnemies() const {
+    return enemies;
+}
+
+void Room::addObjects(Object& object) {
+    objects.push_back(object);
+}
+
+void Room::addEnemies(Enemy& enemy) {
+    enemies.push_back(enemy);
 }

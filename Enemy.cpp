@@ -4,36 +4,21 @@
 
 #include "Enemy.h"
 #include "Object.h"
-#include "Room.h"
 #include <string>
 #include <vector>
 using namespace std;
 
-Enemy::Enemy(string enemyName, string enemyId, string description, int aggressiveness, string initialRoom, vector<string> killedBy, int health) {
-    enemyName_ = enemyId;
-    enemyId_ = enemyId;
-    description_ = description;
-    aggressiveness_ = aggressiveness;
-    initialRoom_ = initialRoom;
-    killedBy_ = killedBy;
-    health_ = health;
-}
+Enemy::Enemy(const string &enemyId, const string &enemyName, const string &description, int aggressiveness,
+             const vector<string> &killedBy) : enemyId_(enemyId), enemyName_(enemyName), description_(description),
+                                               aggressiveness_(aggressiveness), killedBy_(killedBy) {}
 
 
-int Enemy::getHealth() const {
-    return health_;
-}
-
-void Enemy::setHealth(int health) {
-    health_ = health;
+const string &Enemy::getEnemyId() const {
+    return enemyId_;
 }
 
 const string &Enemy::getEnemyName() const {
     return enemyName_;
-}
-
-const string &Enemy::getEnemyId() const {
-    return enemyId_;
 }
 
 const string &Enemy::getDescription() const {
@@ -44,11 +29,6 @@ int Enemy::getAggressiveness() const {
     return aggressiveness_;
 }
 
-const string &Enemy::getInitialRoom() const {
-    return initialRoom_;
-}
-
 const vector<string> &Enemy::getKilledBy() const {
     return killedBy_;
 }
-

@@ -3,34 +3,27 @@
 //
 
 #include "Player.h"
+#include "Object.h"
+#include "Room.h"
 
-Player::Player(const string &playerId, const string &playerName, const string &currentRoomId) : playerId(playerId), playerName(playerName),
-                                                currentRoomId(currentRoomId), health(100), objects({}) {}
+Player::Player(Room &currentRoom) : currentRoom(currentRoom), health(100), objects() {}
 
-string Player::getPlayerId() const {
-    return playerId;
-}
-
-string Player::getPlayerName() const {
-    return playerName;
-}
-
-string Player::getCurrentRoomId() const {
-    return currentRoomId;
+Room Player::getCurrentRoom() const {
+    return currentRoom;
 }
 
 int Player::getHealth() const {
     return health;
 }
 
-vector<string> Player::getObjects() const {
+vector<Object> Player::getObjects() const {
     return objects;
 }
 
-void Player::setCurrentRoom(string roomId) {
-    currentRoomId = roomId;
+void Player::setCurrentRoom(Room &newCurrentRoom) {
+    Player::currentRoom = newCurrentRoom;
 }
 
-void Player::setName(string name){
-    playerName = name;
+void Player::addObjects(Object &object) {
+    objects.push_back(object);
 }
