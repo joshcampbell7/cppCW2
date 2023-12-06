@@ -14,8 +14,9 @@
 using namespace std;
 
 string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
-    if (gameMap.getPlayer().getCurrentRoom().getExits().find(command.at(1)) != gameMap.getPlayer().getCurrentRoom().getExits().end()) {
-        Room& nextRoom = gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getExits().at(command.at(1)));
+    if (gameMap.getPlayer().getCurrentRoom().getExits().find(command.at(1)) !=
+        gameMap.getPlayer().getCurrentRoom().getExits().end()) {
+        Room &nextRoom = gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getExits().at(command.at(1)));
         gameMap.getPlayer().setCurrentRoom(nextRoom);
         newRoom = true;
         return "Travelling " + command.at(1) + "...";
@@ -26,20 +27,18 @@ string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
 
 string takeMethod(const vector<string> &command, Map &gameMap) {
     vector<Object> objectsInRoom = gameMap.getPlayer().getCurrentRoom().getObjects();
-    for (Object object : objectsInRoom) {
+    for (Object object: objectsInRoom) {
         if (object.getObjectName() == command.at(1)) {
             gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).removeObjects(object);
             gameMap.getPlayer().getCurrentRoom().removeObjects(object);
             gameMap.getPlayer().addObjects(object);
+            return object.getObjectName() + " item added to inventory";
         }
-        return object.getObjectName() + " item added to inventory";
     }
-    //if it isn't then return "That item isn't in the room"
     return "That item isn't in the room.";
 }
 
 string lookMethod(const vector<string> &command, Map &gameMap) {
-    //vector<Object> objectsInRoom = gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).getObjects();
     for (Object &object: gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).getObjects()) {
         if (command.at(1) == object.getObjectName()) {
             return object.getDescription() + " Be sure to take it first though...";
@@ -53,7 +52,7 @@ string killMethod(const vector<string> &command, Map &gameMap) {
     return "This is the kill method.";
 }
 
-void moveHandler(Map& gameMap) {
+void moveHandler(Map &gameMap) {
     //enum and map set up to facilitate use of switch case statements as they can't handle strings
     enum moveCode {
         mGo, mTake, mLook, mKill
@@ -117,7 +116,7 @@ void moveHandler(Map& gameMap) {
     }
 }
 
-void mainEngine(Map& gameMap) {
+void mainEngine(Map &gameMap) {
     cout << "Welcome to Map .. of Text Adventure Game" << endl;
     /*
     cout << "Before we start, What is your name?" << endl;
