@@ -24,11 +24,11 @@ string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
     return "Please enter a valid direction.";
 }
 
-string takeMethod(const vector<string> &command, Player &player) {
-    vector<string>& objectsInRoom = getRooms().at(player.getCurrentRoomId()).getObjects();
-    cout<<"items in room before erase: " << (getRooms().at(player.getCurrentRoomId()).getObjects().size()) << endl;
-    for (auto it = getRooms().at(player.getCurrentRoomId()).getObjects().begin(); it != getRooms().at(player.getCurrentRoomId()).getObjects().end(); ++it) {
-        const string& objectName = *it;
+string takeMethod(const vector<string> &command, Map &gameMap) {
+    vector<Object>& objectsInRoom = gameMap.getPlayer().getCurrentRoom().getObjects();
+    cout<<"items in room before erase: " << gameMap.getPlayer().getCurrentRoom().getObjects().size() << endl;
+    for (auto it = gameMap.getPlayer().getCurrentRoom().getObjects().begin(); it != gameMap.getPlayer().getCurrentRoom().getObjects().end(); ++it) {
+        const auto& objectName = *it;
         Object object = getObjects().at(objectName);
 
         if (command.at(1) == object.getObjectName()) {

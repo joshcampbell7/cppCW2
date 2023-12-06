@@ -38,3 +38,15 @@ void Room::addObjects(Object& object) {
 void Room::addEnemies(Enemy& enemy) {
     enemies.push_back(enemy);
 }
+
+void Room::removeObjects(Object &object) {
+    for (Object i : objects) {
+        if (i==object) {
+
+        }
+    }
+}
+
+void Room::removeEnemies(Enemy &enemy) {
+
+}

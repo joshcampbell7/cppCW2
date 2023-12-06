@@ -19,6 +19,10 @@ public:
 
     const string &getDescription() const;
 
+    bool operator==(const Object& other) const {
+        return this->objectId_ == other.objectId_;
+    }
+
 private:
     string objectId_;
     string objectName_;

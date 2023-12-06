@@ -30,6 +30,10 @@ public:
 
     void addEnemies(Enemy &enemy);
 
+    void removeObjects(Object &object);
+
+    void removeEnemies(Enemy &enemy);
+
 private:
     string roomId;
     string description;
