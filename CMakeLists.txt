@@ -18,4 +18,6 @@ add_executable(cppCW2 main.cpp
         jsonParser.cpp
         MainEngine.h
         MainEngine.cpp
+        Map.h
+        Map.cpp
 )

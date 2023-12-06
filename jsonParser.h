@@ -10,9 +10,11 @@
 #include "Room.h"
 #include "Object.h"
 #include "Player.h"
+#include "Map.h"
+
 #endif //CPPCW2_JSONPARSER_H
 
-void jsonParser();
+Map jsonParser();
 map<string,Room> getRooms();
 map<string,Object> getObjects();
 map<string,Objective> getObjectives();

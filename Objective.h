@@ -1,13 +1,13 @@
 //
 // Created by joshu on 29/11/2023.
 //
-#include <string>
-#include <vector>
-
-using namespace std;
 
 #ifndef CPPCW2_OBJECTIVE_H
 #define CPPCW2_OBJECTIVE_H
+
+#include <string>
+#include <vector>
+using namespace std;
 
 class Objective{
 public:
@@ -22,7 +22,6 @@ private:
     string objectiveId_;
     string type_;
     vector<string> what_;
-
 };
 
 #endif //CPPCW2_OBJECTIVE_H

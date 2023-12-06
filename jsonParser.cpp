@@ -8,6 +8,7 @@
 #include "Room.h"
 #include "Object.h"
 #include "Player.h"
+#include "Map.h"
 
 #include <iostream>
 #include <fstream>
@@ -17,68 +18,47 @@
 using namespace std;
 using json = nlohmann::json;
 
-map<string,Enemy> Enemies;
-map<string,Room> Rooms;
-map<string,Object> Objects;
-map<string,Objective> Objectives;
-string initialroom;
-
-void jsonParser() {
-    try {
+Map jsonParser() {
+    //try {
         ifstream fin("../map1.json");
         json j;
         fin >> j; // read from file into j
-
-// This outputs how many things there are at the top level
-// and the keys (5: rooms, objects, enemies, player, objective)
         int numTypes = j.size();
         for (auto e: j.items()) {
             string s = e.key();
         }
-        map<string,any> allObjects;
-        int enemyId=1;
-        for (const auto &enemy: j["enemies"]) {
-            Enemy enemy1 = Enemy("Zombie", "enemy"+to_string(enemyId), enemy["desc"], enemy["aggressiveness"], enemy["initialroom"],
-                                 enemy["killedby"], 100);
-            Enemies.insert({enemy1.getEnemyId(),enemy1});
-            enemyId++;
-        }
-        map<string,vector<string>> objects;
+
+        map<string, Room> rooms;
+        map<string, Object> objects;
+        map<string, Enemy> enemies;
+
         for (const auto &room: j["rooms"]) {
-            vector<string> theObjects;
-            objects[room["id"]] = theObjects;
+            map<string, string> newMap = room["exits"].get<map<string, string>>();
+            Room newRoom = Room(room["id"], room["desc"], newMap);
+            rooms.insert(make_pair(room["id"], newRoom));
         }
+
         int objectId=1;
-        for (const auto &object: j["objects"]) {
-            Object object1 = Object("object"+to_string(objectId), object["desc"],object["initialroom"],0,object["id"]);
-            Objects.insert({object1.getObjectId(),object1});
-            objects.at(object["initialroom"]).push_back("object"+to_string(objectId));
+        for (auto &object: j["objects"]) {
+            Object newObject = Object("object"+to_string(objectId), object["id"], object["desc"]);
+            rooms.at(object["initialroom"]).addObjects(newObject);
+            objects.insert(make_pair("object"+to_string(objectId), newObject));
             objectId++;
         }
-        for (const auto &room: j["rooms"]) {
-            Room room1 = Room(room["id"], room["desc"],room["exits"],objects.at(room["id"]));
-            Rooms.insert({room1.getRoomId(),room1});
-        }
-        Objective objective1 = Objective("objective1",j["objective"]["type"],j["objective"]["what"]);
-        Objectives.insert({objective1.getObjectiveId(),objective1});
-        initialroom= j["player"]["initialroom"];
-    } catch (exception e) {
-        cout << e.what();
-    }
-}
 
-map<string,Object> getObjects(){
-    return Objects;
-}
-map<string,Room> getRooms(){
-    return Rooms;
-}
-map<string,Enemy> getEnemies(){
-    return Enemies;
-}
-map<string,Objective> getObjectives(){
-    return Objectives;
-}
-string getInitialRoom(){
-    return initialroom;
+        int enemyId=1;
+        for (const auto &enemy: j["enemies"]) {
+            Enemy newEnemy = Enemy("enemy"+to_string(enemyId), enemy["id"], enemy["desc"], enemy["aggressiveness"], enemy["killedby"]);
+            rooms.at(enemy["initialroom"]).addEnemies(newEnemy);
+            enemies.insert(make_pair("enemy"+to_string(enemyId), newEnemy));
+            enemyId++;
+        }
+
+        Player player = Player(rooms.at(j["player"]["initialroom"]));
+
+        Objective objective = Objective("objective1",j["objective"]["type"],j["objective"]["what"]);
+
+        Map gameMap = Map(objects, enemies, rooms, player, objective);
+        return gameMap;
+
 }
