@@ -19,12 +19,14 @@ public:
     Room& getCurrentRoom();
 
     int getHealth() const;
+    void setHealth(int health);
 
     vector<Object> getObjects() const;
 
     void addObjects(Object &object);
 
     void setCurrentRoom(Room &currentRoom);
+    void removeObject(Object &object);
 
 private:
     Room currentRoom;

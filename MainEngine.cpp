@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "jsonParser.h"
 #include "Map.h"
+#include <random>
 
 using namespace std;
 
@@ -47,9 +48,45 @@ string lookMethod(const vector<string> &command, Map &gameMap) {
     return "That object is not in this room...";
 }
 
-string killMethod(const vector<string> &command, Map &gameMap) {
+int generateNumber(){
+    std::random_device rd;
+    std::mt19937 gen(rd());
 
-    return "This is the kill method.";
+    // Define the range [50, 100]
+    std::uniform_int_distribution<int> distribution(50, 100);
+
+    // Generate a random number
+    auto randomNumber = distribution(gen);
+    return randomNumber;
+}
+
+string killMethod(const vector<string> &command, Map &gameMap) {
+    for (auto &enemy: gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+        //check if enemy player wants to kill is in room
+        if(command[1] == enemy.getEnemyName()){
+            //loops through to find object
+            for(Object object : gameMap.getPlayer().getObjects()){
+                //checks if object can kill enemy
+                if(object.getObjectName() == enemy.getKilledBy().at(0)){
+                    //kills enemy
+                    gameMap.getPlayer().getCurrentRoom().removeEnemies(enemy);
+                    gameMap.getPlayer().removeObject(object);
+                    return enemy.getEnemyName() + " has been killed! you have lost your: " + object.getObjectName();
+                }
+            }
+            // if user tries to kill enemy but doesn't have valid weapon then enemy will attack the player
+            if(enemy.getAggressiveness()>=gameMap.getPlayer().getHealth()){
+                return "you died.. game over";
+            }
+            // if user has more health than enemy attack then user health is updated
+            int newHealth = gameMap.getPlayer().getHealth() - enemy.getAggressiveness();
+            gameMap.getPlayer().setHealth(newHealth);
+            return "Oh no, you took damage! your new health is: " + to_string(gameMap.getPlayer().getHealth());
+
+        }
+    }
+
+    return "There are no enemies to kill";
 }
 
 void moveHandler(Map &gameMap) {

@@ -23,8 +23,7 @@ public:
     const map<string, string> &getExits() const;
 
     vector<Object> & getObjects();
-
-    const vector<Enemy> &getEnemies() const;
+    vector<Enemy> & getEnemies();
 
     void addObjects(Object &object);
 

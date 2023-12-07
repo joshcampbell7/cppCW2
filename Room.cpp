@@ -29,7 +29,7 @@ vector<Object> & Room::getObjects() {
     return objects;
 }
 
-const vector<Enemy> &Room::getEnemies() const {
+vector<Enemy> & Room::getEnemies(){
     return enemies;
 }
 
@@ -49,6 +49,10 @@ void Room::removeObjects(Object &object) {
 }
 
 void Room::removeEnemies(Enemy &enemy) {
+    auto it = find(enemies.begin(), enemies.end(), enemy);
+    if (it != enemy.end()) {
+        enemy.erase(it);
+    }
 
 }
 
