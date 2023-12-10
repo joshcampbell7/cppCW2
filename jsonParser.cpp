@@ -23,7 +23,6 @@ Map jsonParser(string jsonFile) {
         ifstream fin(jsonFile);
         json j;
         fin >> j; // read from file into j
-        int numTypes = j.size();
         for (auto e: j.items()) {
             string s = e.key();
         }
