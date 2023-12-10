@@ -17,6 +17,7 @@ public:
     string getObjectiveId() const;
     string getType() const;
     vector<string> getWhat() const;
+    void removeWhat(string &what);
 
 private:
     string objectiveId_;

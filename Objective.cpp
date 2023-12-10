@@ -2,6 +2,7 @@
 // Created by joshu on 29/11/2023.
 //
 
+#include <algorithm>
 #include "Objective.h"
 
 Objective::Objective(const string& objectiveId_, const string& type_, const vector<string>& what_)
@@ -19,4 +20,11 @@ std::string Objective::getType() const {
 
 std::vector<std::string> Objective::getWhat() const {
     return what_;
+}
+
+void Objective::removeWhat(string &what) {
+    auto it = find(what_.begin(), what_.end(), what);
+    if (it != what_.end()) {
+        what_.erase(it);
+    }
 }

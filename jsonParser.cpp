@@ -18,9 +18,9 @@
 using namespace std;
 using json = nlohmann::json;
 
-Map jsonParser() {
+Map jsonParser(string jsonFile) {
     //try {
-        ifstream fin("../map1.json");
+        ifstream fin(jsonFile);
         json j;
         fin >> j; // read from file into j
         int numTypes = j.size();
@@ -32,7 +32,7 @@ Map jsonParser() {
         map<string, Object> objects;
         map<string, Enemy> enemies;
 
-        for (const auto &room: j["rooms"]) {
+        for (auto &room: j["rooms"]) {
             map<string, string> newMap = room["exits"].get<map<string, string>>();
             Room newRoom = Room(room["id"], room["desc"], newMap);
             rooms.insert(make_pair(room["id"], newRoom));
@@ -47,8 +47,9 @@ Map jsonParser() {
         }
 
         int enemyId=1;
-        for (const auto &enemy: j["enemies"]) {
-            Enemy newEnemy = Enemy("enemy"+to_string(enemyId), enemy["id"], enemy["desc"], enemy["aggressiveness"], enemy["killedby"]);
+        for (auto &enemy: j["enemies"]) {
+            vector<string> kills = enemy["killedby"].get<vector<string>>();
+            Enemy newEnemy = Enemy("enemy"+to_string(enemyId), enemy["id"], enemy["desc"], enemy["aggressiveness"], kills);
             rooms.at(enemy["initialroom"]).addEnemies(newEnemy);
             enemies.insert(make_pair("enemy"+to_string(enemyId), newEnemy));
             enemyId++;

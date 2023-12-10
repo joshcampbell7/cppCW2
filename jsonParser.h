@@ -14,7 +14,7 @@
 
 #endif //CPPCW2_JSONPARSER_H
 
-Map jsonParser();
+Map jsonParser(string jsonFile);
 map<string,Room> getRooms();
 map<string,Object> getObjects();
 map<string,Objective> getObjectives();

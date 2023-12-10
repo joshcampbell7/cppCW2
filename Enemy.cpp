@@ -9,7 +9,7 @@
 using namespace std;
 
 Enemy::Enemy(const string &enemyId, const string &enemyName, const string &description, int aggressiveness,
-             const vector<string> &killedBy) : enemyId_(enemyId), enemyName_(enemyName), description_(description),
+             vector<string> &killedBy) : enemyId_(enemyId), enemyName_(enemyName), description_(description),
                                                aggressiveness_(aggressiveness), killedBy_(killedBy) {}
 
 
@@ -29,6 +29,6 @@ int Enemy::getAggressiveness() const {
     return aggressiveness_;
 }
 
-const vector<string> &Enemy::getKilledBy() const {
+vector<string> &Enemy::getKilledBy() {
     return killedBy_;
 }

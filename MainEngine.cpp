@@ -19,10 +19,17 @@ string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
         Room &nextRoom = gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getExits().at(command.at(1)));
         gameMap.getPlayer().setCurrentRoom(nextRoom);
         newRoom = true;
+        if (gameMap.getObjective().getType() == "room") {
+            for (string i : gameMap.getObjective().getWhat()) {
+                if (i == nextRoom.getRoomId()) {
+                    gameMap.getObjective().removeWhat(i);
+                }
+            }
+        }
         return "Travelling " + command.at(1) + "...";
     }
     newRoom = false;
-    return "Please enter a valid direction.";
+    return "You can't go that way...";
 }
 
 string takeMethod(const vector<string> &command, Map &gameMap) {
@@ -32,10 +39,17 @@ string takeMethod(const vector<string> &command, Map &gameMap) {
             gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).removeObjects(object);
             gameMap.getPlayer().getCurrentRoom().removeObjects(object);
             gameMap.getPlayer().addObjects(object);
-            return object.getObjectName() + " item added to inventory";
+            if (gameMap.getObjective().getType() == "collect") {
+                for (string i : gameMap.getObjective().getWhat()) {
+                    if (i == object.getObjectName()) {
+                        gameMap.getObjective().removeWhat(i);
+                    }
+                }
+            }
+            return object.getObjectName() + " item added to inventory.";
         }
     }
-    return "That item isn't in the room.";
+    return "That item isn't in the room...";
 }
 
 string lookMethod(const vector<string> &command, Map &gameMap) {
@@ -48,8 +62,38 @@ string lookMethod(const vector<string> &command, Map &gameMap) {
 }
 
 string killMethod(const vector<string> &command, Map &gameMap) {
-
-    return "This is the kill method.";
+    vector<Enemy> enemiesInRoom = gameMap.getPlayer().getCurrentRoom().getEnemies();
+    for (Enemy enemy: enemiesInRoom) {
+        if (enemy.getEnemyName() == command.at(1)) {
+            bool weapon = false;
+            for (const Object& object : gameMap.getPlayer().getObjects()) {
+                for (const string& killer : enemy.getKilledBy()) {
+                    if (killer == object.getObjectName()) {
+                        weapon = true;
+                        break;
+                    }
+                }
+                if (weapon) {
+                    break;
+                }
+            }
+            if (weapon) {
+                gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).removeEnemies(enemy);
+                gameMap.getPlayer().getCurrentRoom().removeEnemies(enemy);
+                if (gameMap.getObjective().getType() == "kill") {
+                    for (string i : gameMap.getObjective().getWhat()) {
+                        if (i == enemy.getEnemyName()) {
+                            gameMap.getObjective().removeWhat(i);
+                        }
+                    }
+                }
+                return enemy.getEnemyName() + " has been killed.";
+            } else {
+                return "You don't have the right weapon to kill " + enemy.getEnemyName() + "...";
+            }
+        }
+    }
+    return "That enemy isn't in this room...";
 }
 
 void moveHandler(Map &gameMap) {
@@ -108,6 +152,7 @@ void moveHandler(Map &gameMap) {
                 break;
             case mKill:
                 cout << killMethod(command, gameMap) << endl;
+
                 break;
             default:
                 cout << "Please enter a valid input." << endl;
@@ -156,4 +201,6 @@ void mainEngine(Map &gameMap) {
 
     //call method that handles the user inputs etc
     moveHandler(gameMap);
+
+    cout << "Congratulations! YOU WIN!!!" << endl;
 }

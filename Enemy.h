@@ -15,7 +15,7 @@ class Enemy {
 
 public:
     Enemy(const string &enemyId, const string &enemyName, const string &description, int aggressiveness,
-          const vector<string> &killedBy);
+          vector<string> &killedBy);
 
     const string &getEnemyId() const;
 
@@ -25,7 +25,11 @@ public:
 
     int getAggressiveness() const;
 
-    const vector<string> &getKilledBy() const;
+    vector<string> &getKilledBy() ;
+
+    bool operator==(const Enemy& other) const {
+        return this->enemyId_ == other.enemyId_;
+    }
 
 private:
     string enemyId_;

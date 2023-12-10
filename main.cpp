@@ -11,7 +11,8 @@ using namespace std;
 using json = nlohmann::json;
 
 int main() {
-    Map gameMap = jsonParser();
+    string jsonFile = "../map1.json";
+    Map gameMap = jsonParser(jsonFile);
     mainEngine(gameMap);
     return 0;
 }

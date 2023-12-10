@@ -14,6 +14,8 @@ using namespace std;
 
 class Room{
 public:
+    Room() = default;
+
     Room(const string &roomId, const string &description, map<string, string> &exits);
 
     const string &getRoomId() const;
@@ -24,7 +26,7 @@ public:
 
     vector<Object> & getObjects();
 
-    const vector<Enemy> &getEnemies() const;
+    vector<Enemy> &getEnemies();
 
     void addObjects(Object &object);
 
