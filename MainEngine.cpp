@@ -133,7 +133,8 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                         }
                     }
                 }
-                return enemy.getEnemyName() + " has been killed.";
+                gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() + enemy.getAggressiveness());
+                return enemy.getEnemyName() + " has been killed. They dropped a potion that replenished your health, your new health is " + to_string(gameMap.getPlayer().getHealth());
             } else {
                 gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() - enemy.getAggressiveness());
                 if(gameMap.getPlayer().getHealth() <=0){
