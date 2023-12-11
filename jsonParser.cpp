@@ -101,22 +101,23 @@ Map jsonParser(string jsonFile) {
         map<string, Object> objects;
         map<string, Enemy> enemies;
 
+        int health = 100;
+        if(j["player"].contains("health")){
+            health = j["player"]["health"];
+        }
+
         for (auto &room: j["rooms"]) {
             map<string, string> newMap = room["exits"].get<map<string, string>>();
             Room newRoom = Room(room["id"], room["desc"], newMap);
             rooms.insert(make_pair(room["id"], newRoom));
         }
 
-        Player player = Player(rooms.at(j["player"]["initialroom"]));
-        if(j["player"].contains("health")){
-            player.setHealth(j["player"]["health"]);
-        }
-
         int objectId = 1;
+        vector<Object> playerObjects;
         for (auto &object: j["objects"]) {
             Object newObject = Object("object" + to_string(objectId), object["id"], object["desc"]);
             if (object["initialroom"] == "player") {
-                player.addObjects(newObject);
+                playerObjects.push_back(newObject);
             } else {
                 rooms.at(object["initialroom"]).addObjects(newObject);
             }
@@ -132,6 +133,12 @@ Map jsonParser(string jsonFile) {
             rooms.at(enemy["initialroom"]).addEnemies(newEnemy);
             enemies.insert(make_pair("enemy" + to_string(enemyId), newEnemy));
             enemyId++;
+        }
+
+        Player player = Player(rooms.at(j["player"]["initialroom"]));
+        player.setHealth(health);
+        for (Object i : playerObjects) {
+            player.addObjects(i);
         }
 
         Objective objective = Objective("objective1", j["objective"]["type"], j["objective"]["what"]);
