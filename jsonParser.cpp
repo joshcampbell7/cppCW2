@@ -19,6 +19,78 @@
 using namespace std;
 using json = nlohmann::json;
 
+json formatJson(Map &gameMap){
+    json data;
+    // Populate the JSON object with sample data
+    data["player"]["initialroom"] = gameMap.getPlayer().getCurrentRoom().getRoomId();
+    data["player"]["health"] = gameMap.getPlayer().getHealth();
+
+    json objects = json::array(); // Create an array for objects
+    for (auto& roomItem : gameMap.getRooms()) {
+        for (auto& objectItem : roomItem.second.getObjects()) {
+            json object = {
+                    {"id", objectItem.getObjectName()},
+                    {"desc", objectItem.getDescription()},
+                    {"initialroom", roomItem.second.getRoomId()}  // Default value
+            };
+            objects.push_back(object);
+            cout<<"length of player inventory is: " << gameMap.getPlayer().getObjects().size() <<endl;
+        }
+    }
+
+    for (auto& playerObject : gameMap.getPlayer().getObjects()) {
+        json object = {
+                {"id", playerObject.getObjectName()},
+                {"desc", playerObject.getDescription()},
+                {"initialroom", "player"}  // Default value
+        };
+        objects.push_back(object);
+    }
+    data["objects"] = objects;
+
+
+    json enemies = json::array(); // Create an array for rooms
+    for (const auto& item : gameMap.getEnemies()) {
+        json enemy = {
+                {"enemyName", item.second.getEnemyName()},
+                {"enemyDescription", item.second.getDescription()},
+                {"enemyId", item.second.getEnemyId()},
+                {"aggressiveness", item.second.getAggressiveness()}
+        };
+
+        enemies.push_back(enemy);
+    }
+    data["enemies"] = enemies;
+
+    json roomsArray = json::array();
+    for (auto& item : gameMap.getRooms()) {
+        json exits = json::array();
+        exits.push_back(item.second.getExits());
+        json roomObject = {
+                {"roomId", item.second.getRoomId()},
+                {"roomDescription", item.second.getDescription()},
+                {"exits", exits},
+
+        };
+
+        roomsArray.push_back(roomObject);
+    }
+    data["rooms"] = roomsArray;
+
+
+    json what = json::array();
+    for (const auto& item : gameMap.getObjective().getWhat()) {
+        what.push_back(item);
+    }
+
+    json objectiveArray = {
+            {"objectiveType",gameMap.getObjective().getType()},
+            {"what",what}
+    };
+    data["objective"] = objectiveArray;
+    return data;
+}
+
 Map jsonParser(string jsonFile) {
     try {
         ifstream fin(jsonFile);
@@ -35,10 +107,19 @@ Map jsonParser(string jsonFile) {
             rooms.insert(make_pair(room["id"], newRoom));
         }
 
+        Player player = Player(rooms.at(j["player"]["initialroom"]));
+        if(j["player"].contains("health")){
+            player.setHealth(j["player"]["health"]);
+        }
+
         int objectId = 1;
         for (auto &object: j["objects"]) {
             Object newObject = Object("object" + to_string(objectId), object["id"], object["desc"]);
-            rooms.at(object["initialroom"]).addObjects(newObject);
+            if (object["initialroom"] == "player") {
+                player.addObjects(newObject);
+            } else {
+                rooms.at(object["initialroom"]).addObjects(newObject);
+            }
             objects.insert(make_pair("object" + to_string(objectId), newObject));
             objectId++;
         }
@@ -52,8 +133,6 @@ Map jsonParser(string jsonFile) {
             enemies.insert(make_pair("enemy" + to_string(enemyId), newEnemy));
             enemyId++;
         }
-
-        Player player = Player(rooms.at(j["player"]["initialroom"]));
 
         Objective objective = Objective("objective1", j["objective"]["type"], j["objective"]["what"]);
 

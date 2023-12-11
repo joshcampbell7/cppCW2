@@ -7,12 +7,15 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <fstream>
 #include "MainEngine.h"
 #include "Player.h"
 #include "jsonParser.h"
 #include "Map.h"
+#include "json.hpp"
 
 using namespace std;
+using json = nlohmann::json;
 
 string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
     if (gameMap.getPlayer().getCurrentRoom().getExits().find(command.at(1)) !=
@@ -101,16 +104,32 @@ string killMethod(const vector<string> &command, Map &gameMap) {
     }
     return "That enemy isn't in this room...";
 }
+//Need code to parse gameMap to save user details
+//Need code to end game after the save
+string saveMethod(const vector<string> &command, Map &gameMap) {
+    ofstream file("../output.json");
+    json data = formatJson(gameMap);
+
+    if (file.is_open()) {
+        file << data.dump(2);
+        file.close();
+        return "Game has been saved!";
+    } else {
+        throw runtime_error("ERROR IN MainEngine.cpp, Failed to save json: File did not open ");
+    }
+
+}
 
 void moveHandler(Map &gameMap) {
     //enum and map set up to facilitate use of switch case statements as they can't handle strings
     enum moveCode {
-        mGo, mTake, mLook, mKill
+        mGo, mTake, mLook, mKill, mSave
     };
     map<string, moveCode> m = {{"look", mLook},
                                {"go",   mGo},
                                {"move", mGo},
                                {"take", mTake},
+                               {"save", mSave},
                                {"kill", mKill}};
 
     cout << "\nYou have 4 input command options: go, look, take, fight." << endl;
@@ -163,6 +182,10 @@ void moveHandler(Map &gameMap) {
                 break;
             case mKill:
                 cout << killMethod(command, gameMap) << endl;
+                break;
+
+            case mSave:
+                cout << saveMethod(command, gameMap) << endl;
                 break;
             default:
                 cout << "Please enter a valid input." << endl;
