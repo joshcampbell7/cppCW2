@@ -115,7 +115,7 @@ void moveHandler(Map &gameMap) {
 
     cout << "\nYou have 4 input command options: go, look, take, fight." << endl;
     bool newRoom = true;
-    while (!gameMap.getObjective().getWhat().empty()) {
+    while (!gameMap.getObjective().getWhat().empty() && gameMap.getPlayer().getHealth()>0) {
         if (newRoom) {
             cout << "\nYou are currently in " + gameMap.getPlayer().getCurrentRoom().getRoomId() + ". " +
                     gameMap.getPlayer().getCurrentRoom().getDescription() << endl;
@@ -211,6 +211,6 @@ void mainEngine(Map &gameMap) {
 
     //call method that handles the user inputs etc
     moveHandler(gameMap);
-
+    if (gameMap.getPlayer().getHealth())
     cout << "Congratulations! YOU WIN!!!" << endl;
 }
