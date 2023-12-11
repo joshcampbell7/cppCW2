@@ -19,29 +19,29 @@
 using namespace std;
 using json = nlohmann::json;
 
-json formatJson(Map &gameMap){
+json formatJson(Map &gameMap) {
     json data;
     // Populate the JSON object with sample data
     data["player"]["initialroom"] = gameMap.getPlayer().getCurrentRoom().getRoomId();
     data["player"]["health"] = gameMap.getPlayer().getHealth();
 
     json objects = json::array(); // Create an array for objects
-    for (auto& roomItem : gameMap.getRooms()) {
-        for (auto& objectItem : roomItem.second.getObjects()) {
+    for (auto &roomItem: gameMap.getRooms()) {
+        for (auto &objectItem: roomItem.second.getObjects()) {
             json object = {
-                    {"id", objectItem.getObjectName()},
-                    {"desc", objectItem.getDescription()},
+                    {"id",          objectItem.getObjectName()},
+                    {"desc",        objectItem.getDescription()},
                     {"initialroom", roomItem.second.getRoomId()}  // Default value
             };
             objects.push_back(object);
-            cout<<"length of player inventory is: " << gameMap.getPlayer().getObjects().size() <<endl;
+            cout << "length of player inventory is: " << gameMap.getPlayer().getObjects().size() << endl;
         }
     }
 
-    for (auto& playerObject : gameMap.getPlayer().getObjects()) {
+    for (auto &playerObject: gameMap.getPlayer().getObjects()) {
         json object = {
-                {"id", playerObject.getObjectName()},
-                {"desc", playerObject.getDescription()},
+                {"id",          playerObject.getObjectName()},
+                {"desc",        playerObject.getDescription()},
                 {"initialroom", "player"}  // Default value
         };
         objects.push_back(object);
@@ -50,42 +50,43 @@ json formatJson(Map &gameMap){
 
 
     json enemies = json::array(); // Create an array for rooms
-    for (const auto& item : gameMap.getEnemies()) {
-        json enemy = {
-                {"enemyName", item.second.getEnemyName()},
-                {"enemyDescription", item.second.getDescription()},
-                {"enemyId", item.second.getEnemyId()},
-                {"aggressiveness", item.second.getAggressiveness()}
-        };
-
-        enemies.push_back(enemy);
-    }
-    data["enemies"] = enemies;
-
     json roomsArray = json::array();
-    for (auto& item : gameMap.getRooms()) {
-        json exits = json::array();
-        exits.push_back(item.second.getExits());
+    for (auto &item: gameMap.getRooms()) {
+        json exits = json::object();  // Use json::object() instead of json::array()
+
+        for (const auto &exit: item.second.getExits()) {
+            exits[exit.first] = exit.second;
+        }
         json roomObject = {
-                {"roomId", item.second.getRoomId()},
-                {"roomDescription", item.second.getDescription()},
+                {"id",    item.second.getRoomId()},
+                {"desc",  item.second.getDescription()},
                 {"exits", exits},
 
         };
-
         roomsArray.push_back(roomObject);
+        for (auto &enemyObject: item.second.getEnemies()) {
+            json enemy = {
+                    {"desc",           enemyObject.getDescription()},
+                    {"id",             enemyObject.getEnemyName()},
+                    {"aggressiveness", enemyObject.getAggressiveness()},
+                    {"initialroom",    item.second.getRoomId()},
+                    {"killedby",       enemyObject.getKilledBy()},
+
+            };
+            enemies.push_back(enemy);
+        }
     }
     data["rooms"] = roomsArray;
-
+    data["enemies"] = enemies;
 
     json what = json::array();
-    for (const auto& item : gameMap.getObjective().getWhat()) {
+    for (const auto &item: gameMap.getObjective().getWhat()) {
         what.push_back(item);
     }
 
     json objectiveArray = {
-            {"objectiveType",gameMap.getObjective().getType()},
-            {"what",what}
+            {"type", gameMap.getObjective().getType()},
+            {"what", what}
     };
     data["objective"] = objectiveArray;
     return data;
@@ -102,7 +103,7 @@ Map jsonParser(string jsonFile) {
         map<string, Enemy> enemies;
 
         int health = 100;
-        if(j["player"].contains("health")){
+        if (j["player"].contains("health")) {
             health = j["player"]["health"];
         }
 
@@ -137,7 +138,7 @@ Map jsonParser(string jsonFile) {
 
         Player player = Player(rooms.at(j["player"]["initialroom"]));
         player.setHealth(health);
-        for (Object i : playerObjects) {
+        for (Object i: playerObjects) {
             player.addObjects(i);
         }
 

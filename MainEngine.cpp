@@ -145,10 +145,9 @@ string killMethod(const vector<string> &command, Map &gameMap) {
     }
     return "That enemy isn't in this room...";
 }
-//Need code to parse gameMap to save user details
-//Need code to end game after the save
+
 string saveMethod(const vector<string> &command, Map &gameMap) {
-    ofstream file("../output.json");
+    ofstream file("../saveGame.json");
     json data = formatJson(gameMap);
 
     if (file.is_open()) {
