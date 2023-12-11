@@ -1,6 +1,7 @@
-//
-// Created by joshu on 30/11/2023.
-//
+/*
+    Main Engine handles the actual playing of the text adventure game.
+    The different text based commands are handled in this file
+ */
 
 #include <iostream>
 #include <sstream>
@@ -20,7 +21,7 @@ string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
         gameMap.getPlayer().setCurrentRoom(nextRoom);
         newRoom = true;
         if (gameMap.getObjective().getType() == "room") {
-            for (string i : gameMap.getObjective().getWhat()) {
+            for (string i: gameMap.getObjective().getWhat()) {
                 if (i == nextRoom.getRoomId()) {
                     gameMap.getObjective().removeWhat(i);
                 }
@@ -40,7 +41,7 @@ string takeMethod(const vector<string> &command, Map &gameMap) {
             gameMap.getPlayer().getCurrentRoom().removeObjects(object);
             gameMap.getPlayer().addObjects(object);
             if (gameMap.getObjective().getType() == "collect") {
-                for (string i : gameMap.getObjective().getWhat()) {
+                for (string i: gameMap.getObjective().getWhat()) {
                     if (i == object.getObjectName()) {
                         gameMap.getObjective().removeWhat(i);
                     }
@@ -66,8 +67,8 @@ string killMethod(const vector<string> &command, Map &gameMap) {
     for (Enemy enemy: enemiesInRoom) {
         if (enemy.getEnemyName() == command.at(1)) {
             bool weapon = false;
-            for (const Object& object : gameMap.getPlayer().getObjects()) {
-                for (const string& killer : enemy.getKilledBy()) {
+            for (const Object &object: gameMap.getPlayer().getObjects()) {
+                for (const string &killer: enemy.getKilledBy()) {
                     if (killer == object.getObjectName()) {
                         weapon = true;
                         break;
@@ -81,7 +82,7 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                 gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).removeEnemies(enemy);
                 gameMap.getPlayer().getCurrentRoom().removeEnemies(enemy);
                 if (gameMap.getObjective().getType() == "kill") {
-                    for (string i : gameMap.getObjective().getWhat()) {
+                    for (string i: gameMap.getObjective().getWhat()) {
                         if (i == enemy.getEnemyName()) {
                             gameMap.getObjective().removeWhat(i);
                         }
@@ -89,7 +90,12 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                 }
                 return enemy.getEnemyName() + " has been killed.";
             } else {
-                return "You don't have the right weapon to kill " + enemy.getEnemyName() + "...";
+                gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() - enemy.getAggressiveness());
+                if(gameMap.getPlayer().getHealth() <=0){
+                    return "You don't have the right weapon to kill " + enemy.getEnemyName() + "... it attacked you and you are now DEAD!! ";
+                }
+                return "You don't have the right weapon to kill " + enemy.getEnemyName() + "... it attacked you and your new health is: " + to_string(gameMap.getPlayer().getHealth());
+
             }
         }
     }
@@ -103,12 +109,13 @@ void moveHandler(Map &gameMap) {
     };
     map<string, moveCode> m = {{"look", mLook},
                                {"go",   mGo},
+                               {"move", mGo},
                                {"take", mTake},
                                {"kill", mKill}};
 
     cout << "\nYou have 4 input command options: go, look, take, fight." << endl;
     bool newRoom = true;
-    while (!gameMap.getObjective().getWhat().empty()) {
+    while (!gameMap.getObjective().getWhat().empty() && gameMap.getPlayer().getHealth()>0) {
         if (newRoom) {
             cout << "\nYou are currently in " + gameMap.getPlayer().getCurrentRoom().getRoomId() + ". " +
                     gameMap.getPlayer().getCurrentRoom().getDescription() << endl;
@@ -134,6 +141,10 @@ void moveHandler(Map &gameMap) {
         //runs relevant method for given input
         switch (m.at(command.at(0))) {
             case mGo:
+                if (command.size() < 2) {
+                    cout << "Go where?" << endl;
+                    break;
+                }
                 cout << goMethod(command, gameMap, newRoom) << endl;
                 break;
             case mTake:
@@ -152,7 +163,6 @@ void moveHandler(Map &gameMap) {
                 break;
             case mKill:
                 cout << killMethod(command, gameMap) << endl;
-
                 break;
             default:
                 cout << "Please enter a valid input." << endl;
@@ -201,6 +211,6 @@ void mainEngine(Map &gameMap) {
 
     //call method that handles the user inputs etc
     moveHandler(gameMap);
-
+    if (gameMap.getPlayer().getHealth())
     cout << "Congratulations! YOU WIN!!!" << endl;
 }
