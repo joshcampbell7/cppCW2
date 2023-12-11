@@ -1,6 +1,7 @@
-//
-// Created by joshu on 30/11/2023.
-//
+/*
+    Main Engine handles the actual playing of the text adventure game.
+    The different text based commands are handled in this file
+ */
 
 #include <iostream>
 #include <sstream>
@@ -104,7 +105,12 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                 }
                 return enemy.getEnemyName() + " has been killed.";
             } else {
-                return "You don't have the right weapon to kill " + enemy.getEnemyName() + "...";
+                gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() - enemy.getAggressiveness());
+                if(gameMap.getPlayer().getHealth() <=0){
+                    return "You don't have the right weapon to kill " + enemy.getEnemyName() + "... it attacked you and you are now DEAD!! ";
+                }
+                return "You don't have the right weapon to kill " + enemy.getEnemyName() + "... it attacked you and your new health is: " + to_string(gameMap.getPlayer().getHealth());
+
             }
         }
     }
@@ -118,6 +124,7 @@ void moveHandler(Map &gameMap) {
     };
     map<string, moveCode> m = {{"look", mLook},
                                {"go",   mGo},
+                               {"move", mGo},
                                {"take", mTake},
                                {"kill", mKill}};
 
@@ -143,7 +150,6 @@ void moveHandler(Map &gameMap) {
         //input stream needs to be cleared before using the getline function
         cin.clear();
         cin.sync();
-
         string userAction;
         string s1;
         istringstream iss(userAction);
@@ -158,7 +164,6 @@ void moveHandler(Map &gameMap) {
             getline(iss, s2);
             command.push_back(s2);
         }
-
         //checks for valid input command
         /*
         if (m.find(command.at(0)) == m.end()) {
@@ -209,6 +214,7 @@ void moveHandler(Map &gameMap) {
                     break;
                 }
                 cout << killMethod(command, gameMap) << endl;
+
                 break;
             default:
                 cout << "Please enter a valid input." << endl;
@@ -257,6 +263,6 @@ void mainEngine(Map &gameMap) {
 
     //call method that handles the user inputs etc
     moveHandler(gameMap);
-
+    if (gameMap.getPlayer().getHealth())
     cout << "Congratulations! YOU WIN!!!" << endl;
 }

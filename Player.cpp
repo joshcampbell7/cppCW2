@@ -16,6 +16,10 @@ int Player::getHealth() const {
     return health;
 }
 
+void Player::setHealth(int newHealth) {
+    health = newHealth;
+}
+
 vector<Object> Player::getObjects() const {
     return objects;
 }
