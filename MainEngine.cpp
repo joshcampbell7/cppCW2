@@ -13,12 +13,28 @@
 
 using namespace std;
 
-string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
+string goMethod(const vector<string> &command, Map &gameMap) {
     if (gameMap.getPlayer().getCurrentRoom().getExits().find(command.at(1)) !=
         gameMap.getPlayer().getCurrentRoom().getExits().end()) {
         Room &nextRoom = gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getExits().at(command.at(1)));
         gameMap.getPlayer().setCurrentRoom(nextRoom);
-        newRoom = true;
+        cout << "\nYou now find yourself in " + gameMap.getPlayer().getCurrentRoom().getRoomId() + ". " +
+                gameMap.getPlayer().getCurrentRoom().getDescription() << endl;
+        if (!gameMap.getPlayer().getCurrentRoom().getObjects().empty()) {
+            cout << "In this room you can see some objects: ";
+            for (Object i: gameMap.getPlayer().getCurrentRoom().getObjects()) {
+                cout << i.getObjectName();
+            }
+            if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
+                cout << "...and some enemies: ";
+            }
+        } else if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
+            cout << "In this room you can see some enemies: ";
+        }
+        for (Enemy i : gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+            cout << i.getEnemyName();
+        }
+        cout << endl;
         if (gameMap.getObjective().getType() == "room") {
             for (string i : gameMap.getObjective().getWhat()) {
                 if (i == nextRoom.getRoomId()) {
@@ -28,7 +44,6 @@ string goMethod(const vector<string> &command, Map &gameMap, bool &newRoom) {
         }
         return "Travelling " + command.at(1) + "...";
     }
-    newRoom = false;
     return "You can't go that way...";
 }
 
@@ -107,34 +122,59 @@ void moveHandler(Map &gameMap) {
                                {"kill", mKill}};
 
     cout << "\nYou have 4 input command options: go, look, take, fight." << endl;
-    bool newRoom = true;
-    while (!gameMap.getObjective().getWhat().empty()) {
-        if (newRoom) {
-            cout << "\nYou are currently in " + gameMap.getPlayer().getCurrentRoom().getRoomId() + ". " +
-                    gameMap.getPlayer().getCurrentRoom().getDescription() << endl;
-            newRoom = false;
+    cout << "\nYou begin your adventure in " + gameMap.getPlayer().getCurrentRoom().getRoomId() + ". " +
+            gameMap.getPlayer().getCurrentRoom().getDescription() << endl;
+    if (!gameMap.getPlayer().getCurrentRoom().getObjects().empty()) {
+        cout << "In this room you can see some objects: ";
+        for (Object i: gameMap.getPlayer().getCurrentRoom().getObjects()) {
+            cout << i.getObjectName();
         }
+        if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
+            cout << "...and some enemies: ";
+        }
+    } else if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
+        cout << "In this room you can see some enemies: ";
+    }
+    for (Enemy i : gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+        cout << i.getEnemyName();
+    }
+    cout << endl;
+    while (!gameMap.getObjective().getWhat().empty()) {
         //input stream needs to be cleared before using the getline function
         cin.clear();
         cin.sync();
+
         string userAction;
-        getline(cin, userAction);
-        //splits the input string by the space character
-        string s;
-        stringstream ss(userAction);
+        string s1;
+        istringstream iss(userAction);
         vector<string> command;
-        while (getline(ss, s, ' ')) {
-            command.push_back(s);
+
+        //splits the input string into first word and remaining words
+        getline(cin, userAction);
+        iss >> s1;
+        command.push_back(s1);
+        if (iss) {
+            string s2;
+            getline(iss, s2);
+            command.push_back(s2);
         }
+
         //checks for valid input command
+        /*
         if (m.find(command.at(0)) == m.end()) {
             cout << "Please enter a valid input." << endl;
             continue;
         }
+         */
+        cout << command.at(0);
         //runs relevant method for given input
         switch (m.at(command.at(0))) {
             case mGo:
-                cout << goMethod(command, gameMap, newRoom) << endl;
+                if (command.size() < 2) {
+                    cout << "Go where?" << endl;
+                    break;
+                }
+                cout << goMethod(command, gameMap) << endl;
                 break;
             case mTake:
                 if (command.size() < 2) {
@@ -145,14 +185,30 @@ void moveHandler(Map &gameMap) {
                 break;
             case mLook:
                 if (command.size() < 2) {
-                    cout << "Look at what?" << endl;
+                    if (!gameMap.getPlayer().getCurrentRoom().getObjects().empty()) {
+                        cout << "In this room you can see some objects: ";
+                        for (Object i: gameMap.getPlayer().getCurrentRoom().getObjects()) {
+                            cout << i.getObjectName();
+                        }
+                        if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
+                            cout << "...and some enemies: ";
+                        }
+                    } else if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
+                        cout << "In this room you can see some enemies: ";
+                    }
+                    for (Enemy i : gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+                        cout << i.getEnemyName();
+                    }
                     break;
                 }
                 cout << lookMethod(command, gameMap) << endl;
                 break;
             case mKill:
+                if (command.size() < 2) {
+                    cout << "Kill what?" << endl;
+                    break;
+                }
                 cout << killMethod(command, gameMap) << endl;
-
                 break;
             default:
                 cout << "Please enter a valid input." << endl;
@@ -178,8 +234,8 @@ void mainEngine(Map &gameMap) {
 
     if (gameMap.getObjective().getType() == "kill") {
         cout << "\nTo win the game, your objective is to kill the following enemies: " << endl;
-        for (int i = 0; i < gameMap.getObjective().getWhat().size(); i++) {
-            cout << gameMap.getObjective().getWhat()[i] << endl;
+        for (string i: gameMap.getObjective().getWhat()) {
+            cout << i << endl;
         }
     }
 
