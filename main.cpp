@@ -11,19 +11,16 @@ using namespace std;
 using json = nlohmann::json;
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        cerr << "Usage: " << argv[0] << " <json_file_path>" << endl;
+    try {
+        if (argc != 2) {
+            throw invalid_argument("Usage: " + string(argv[0]) + " <json_file_path>");
+        }
+        string jsonFile = argv[1];
+        Map gameMap = jsonParser(jsonFile);
+        mainEngine(gameMap);
+        return 0;
+    } catch (const exception &e) {
+        cerr << e.what() << endl;
         return 1;
     }
-
-    string jsonFile = argv[1];
-    cout << "Attempting to open JSON file: " << jsonFile << endl;
-
-    // Create an instance of Map using the specified JSON file
-    Map gameMap = jsonParser(jsonFile);
-
-    // Call your mainEngine function with the created Map instance
-    mainEngine(gameMap);
-
-    return 0;
 }

@@ -19,6 +19,7 @@ public:
     Room& getCurrentRoom();
 
     int getHealth() const;
+    void setHealth(int newHealth);
 
     vector<Object> getObjects() const;
 
