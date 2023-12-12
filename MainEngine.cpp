@@ -120,6 +120,9 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                     break;
                 }
             }
+            if (enemy.getKilledBy().empty()) {
+                weapon = true;
+            }
             if (weapon) {
                 gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).removeEnemies(enemy);
                 gameMap.getPlayer().getCurrentRoom().removeEnemies(enemy);
