@@ -11,10 +11,12 @@
 #include "Object.h"
 #include "Player.h"
 #include "Map.h"
-
+#include "json.hpp"
+using json = nlohmann::json;
 #endif //CPPCW2_JSONPARSER_H
 
 Map jsonParser(string jsonFile);
+json formatJson(Map &gameMap);
 map<string,Room> getRooms();
 map<string,Object> getObjects();
 map<string,Objective> getObjectives();

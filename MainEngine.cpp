@@ -7,12 +7,15 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <fstream>
 #include "MainEngine.h"
 #include "Player.h"
 #include "jsonParser.h"
 #include "Map.h"
+#include "json.hpp"
 
 using namespace std;
+using json = nlohmann::json;
 
 string goMethod(const vector<string> &command, Map &gameMap) {
     if (gameMap.getPlayer().getCurrentRoom().getExits().find(command.at(1)) !=
@@ -133,7 +136,8 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                         }
                     }
                 }
-                return enemy.getEnemyName() + " has been killed.";
+                gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() + enemy.getAggressiveness());
+                return enemy.getEnemyName() + " has been killed. They dropped a potion that replenished your health, your new health is " + to_string(gameMap.getPlayer().getHealth());
             } else {
                 gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() - enemy.getAggressiveness());
                 if(gameMap.getPlayer().getHealth() <=0){
@@ -146,16 +150,31 @@ string killMethod(const vector<string> &command, Map &gameMap) {
     return "That enemy isn't in this room...";
 }
 
+string saveMethod(const vector<string> &command, Map &gameMap) {
+    ofstream file("../saveGame.json");
+    json data = formatJson(gameMap);
+
+    if (file.is_open()) {
+        file << data.dump(2);
+        file.close();
+        return "Game has been saved!";
+    } else {
+        throw runtime_error("ERROR IN MainEngine.cpp, Failed to save json: File did not open ");
+    }
+
+}
+
 void moveHandler(Map &gameMap) {
     //enum and map set up to facilitate use of switch case statements as they can't handle strings
     enum moveCode {
-        mGo, mTake, mLook, mKill
+        mGo, mTake, mLook, mKill, mSave
     };
     map<string, moveCode> m = {{"look", mLook},
                                {"list", mLook},
                                {"go",   mGo},
                                {"move", mGo},
                                {"take", mTake},
+                               {"save", mSave},
                                {"kill", mKill}};
 
     cout << "\nYou have 4 input command options: go, look, take, fight." << endl;
@@ -250,6 +269,10 @@ void moveHandler(Map &gameMap) {
                 }
                 cout << killMethod(command, gameMap) << endl;
 
+                break;
+
+            case mSave:
+                cout << saveMethod(command, gameMap) << endl;
                 break;
             default:
                 cout << "Please enter a valid input." << endl;
