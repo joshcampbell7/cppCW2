@@ -21,20 +21,23 @@ string goMethod(const vector<string> &command, Map &gameMap) {
     if (gameMap.getPlayer().getCurrentRoom().getExits().find(command.at(1)) !=
         gameMap.getPlayer().getCurrentRoom().getExits().end()) {
         if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
-            int random = rand() % 100+1;
+            int random = rand() % 100 + 1;
             Enemy enemy = gameMap.getPlayer().getCurrentRoom().getEnemies().at(0);
-            if (enemy.getAggressiveness()>random) {
+            if (enemy.getAggressiveness() > random) {
                 gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() - enemy.getAggressiveness());
-                if(gameMap.getPlayer().getHealth() <=0){
-                    return "You tried to leave the room but " + enemy.getEnemyName() + " attacked you and you are now DEAD!! ";
+                if (gameMap.getPlayer().getHealth() <= 0) {
+                    return "You tried to leave the room but " + enemy.getEnemyName() +
+                           " attacked you and you are now DEAD!! ";
                 }
-                cout << "You tried to leave the room but " << enemy.getEnemyName() << " attacked you and your new health is: " << to_string(gameMap.getPlayer().getHealth()) << ". You escaped just in time." << endl;
+                cout << "You tried to leave the room but " << enemy.getEnemyName()
+                     << " attacked you and your new health is: " << to_string(gameMap.getPlayer().getHealth())
+                     << ". You escaped just in time." << endl;
             }
         }
         Room &nextRoom = gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getExits().at(command.at(1)));
         gameMap.getPlayer().setCurrentRoom(nextRoom);
         if (gameMap.getObjective().getType() == "room") {
-            for (string i : gameMap.getObjective().getWhat()) {
+            for (string i: gameMap.getObjective().getWhat()) {
                 if (i == nextRoom.getRoomId()) {
                     gameMap.getObjective().removeWhat(i);
                 }
@@ -54,7 +57,7 @@ string goMethod(const vector<string> &command, Map &gameMap) {
         } else if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
             cout << "\nIn this room you can see some enemies: ";
         }
-        for (Enemy i : gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+        for (Enemy i: gameMap.getPlayer().getCurrentRoom().getEnemies()) {
             cout << i.getEnemyName();
         }
         cout << endl;
@@ -71,7 +74,7 @@ string takeMethod(const vector<string> &command, Map &gameMap) {
             gameMap.getPlayer().getCurrentRoom().removeObjects(object);
             gameMap.getPlayer().addObjects(object);
             if (gameMap.getObjective().getType() == "collect") {
-                for (string i : gameMap.getObjective().getWhat()) {
+                for (string i: gameMap.getObjective().getWhat()) {
                     if (i == object.getObjectName()) {
                         gameMap.getObjective().removeWhat(i);
                     }
@@ -112,8 +115,8 @@ string killMethod(const vector<string> &command, Map &gameMap) {
     for (Enemy enemy: enemiesInRoom) {
         if (enemy.getEnemyName() == command.at(1)) {
             bool weapon = false;
-            for (const Object& object : gameMap.getPlayer().getObjects()) {
-                for (const string& killer : enemy.getKilledBy()) {
+            for (const Object &object: gameMap.getPlayer().getObjects()) {
+                for (const string &killer: enemy.getKilledBy()) {
                     if (killer == object.getObjectName()) {
                         weapon = true;
                         break;
@@ -130,20 +133,24 @@ string killMethod(const vector<string> &command, Map &gameMap) {
                 gameMap.getRooms().at(gameMap.getPlayer().getCurrentRoom().getRoomId()).removeEnemies(enemy);
                 gameMap.getPlayer().getCurrentRoom().removeEnemies(enemy);
                 if (gameMap.getObjective().getType() == "kill") {
-                    for (string i : gameMap.getObjective().getWhat()) {
+                    for (string i: gameMap.getObjective().getWhat()) {
                         if (i == enemy.getEnemyName()) {
                             gameMap.getObjective().removeWhat(i);
                         }
                     }
                 }
                 gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() + enemy.getAggressiveness());
-                return enemy.getEnemyName() + " has been killed. They dropped a potion that replenished your health, your new health is " + to_string(gameMap.getPlayer().getHealth());
+                return enemy.getEnemyName() +
+                       " has been killed. They dropped a potion that replenished your health, your new health is " +
+                       to_string(gameMap.getPlayer().getHealth());
             } else {
                 gameMap.getPlayer().setHealth(gameMap.getPlayer().getHealth() - enemy.getAggressiveness());
-                if(gameMap.getPlayer().getHealth() <=0){
-                    return "You don't have the right weapon to kill " + enemy.getEnemyName() + "... it attacked you and you are now DEAD!! ";
+                if (gameMap.getPlayer().getHealth() <= 0) {
+                    return "You don't have the right weapon to kill " + enemy.getEnemyName() +
+                           "... it attacked you and you are now DEAD!! ";
                 }
-                return "You don't have the right weapon to kill " + enemy.getEnemyName() + "... it attacked you and your new health is: " + to_string(gameMap.getPlayer().getHealth());
+                return "You don't have the right weapon to kill " + enemy.getEnemyName() +
+                       "... it attacked you and your new health is: " + to_string(gameMap.getPlayer().getHealth());
             }
         }
     }
@@ -151,7 +158,7 @@ string killMethod(const vector<string> &command, Map &gameMap) {
 }
 
 string saveMethod(const vector<string> &command, Map &gameMap) {
-    ofstream file("../saveGame.json");
+    ofstream file("saveGame.json");
     json data = formatJson(gameMap);
 
     if (file.is_open()) {
@@ -192,11 +199,11 @@ void moveHandler(Map &gameMap) {
     } else if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
         cout << "In this room you can see some enemies: ";
     }
-    for (Enemy i : gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+    for (Enemy i: gameMap.getPlayer().getCurrentRoom().getEnemies()) {
         cout << i.getEnemyName();
     }
     cout << endl;
-    while (!gameMap.getObjective().getWhat().empty() && gameMap.getPlayer().getHealth()>0) {
+    while (!gameMap.getObjective().getWhat().empty() && gameMap.getPlayer().getHealth() > 0) {
         //input stream needs to be cleared before using the getline function
         cin.clear();
         cin.sync();
@@ -216,13 +223,6 @@ void moveHandler(Map &gameMap) {
                 command.push_back(s2.substr(1));
             }
         }
-        //checks for valid input command
-        /*
-        if (m.find(command.at(0)) == m.end()) {
-            cout << "Please enter a valid input." << endl;
-            continue;
-        }
-         */
         //runs relevant method for given input
         switch (m.at(command.at(0))) {
             case mGo:
@@ -255,7 +255,7 @@ void moveHandler(Map &gameMap) {
                     } else if (!gameMap.getPlayer().getCurrentRoom().getEnemies().empty()) {
                         cout << "In this room you can see some enemies: ";
                     }
-                    for (Enemy i : gameMap.getPlayer().getCurrentRoom().getEnemies()) {
+                    for (Enemy i: gameMap.getPlayer().getCurrentRoom().getEnemies()) {
                         cout << i.getEnemyName();
                     }
                     break;
@@ -273,7 +273,7 @@ void moveHandler(Map &gameMap) {
 
             case mSave:
                 cout << saveMethod(command, gameMap) << endl;
-                break;
+                exit(0);
             default:
                 cout << "Please enter a valid input." << endl;
                 break;
@@ -283,15 +283,6 @@ void moveHandler(Map &gameMap) {
 
 void mainEngine(Map &gameMap) {
     cout << "Welcome to Map .. of Text Adventure Game" << endl;
-    /*
-    cout << "Before we start, What is your name?" << endl;
-    string name;
-    cin >> name;
-
-    cout << "Welcome " + player.getPlayerName() + "!, " + "you have " + to_string(player.getHealth()) +
-            " health to start with. " + "You also have " + to_string(player.getObjects().size()) +
-            " objects in your inventory." << endl;
-    */
     cout << "Welcome player!, you have " + to_string(gameMap.getPlayer().getHealth()) +
             " health to start with. " + "You also have " + to_string(gameMap.getPlayer().getObjects().size()) +
             " objects in your inventory." << endl;
@@ -317,11 +308,9 @@ void mainEngine(Map &gameMap) {
         }
     }
 
-    //Add code to handle other objects
-
     //call method that handles the user inputs etc
     moveHandler(gameMap);
-    if (gameMap.getPlayer().getHealth()>0) {
+    if (gameMap.getPlayer().getHealth() > 0) {
         cout << "Congratulations! YOU WIN!!!" << endl;
     } else {
         cout << "Out of health! You lose!!! :(" << endl;
