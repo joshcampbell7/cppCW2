@@ -6,11 +6,12 @@
 #include "Object.h"
 #include <string>
 #include <vector>
+
 using namespace std;
 
 Enemy::Enemy(const string &enemyId, const string &enemyName, const string &description, int aggressiveness,
              vector<string> &killedBy) : enemyId_(enemyId), enemyName_(enemyName), description_(description),
-                                               aggressiveness_(aggressiveness), killedBy_(killedBy) {}
+                                         aggressiveness_(aggressiveness), killedBy_(killedBy) {}
 
 
 const string &Enemy::getEnemyId() const {

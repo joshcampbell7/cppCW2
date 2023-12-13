@@ -19,6 +19,7 @@
 using namespace std;
 using json = nlohmann::json;
 
+//create a map file for use when saving the game
 json formatJson(Map &gameMap) {
     json data;
     // Populate the JSON object with sample data
@@ -34,7 +35,6 @@ json formatJson(Map &gameMap) {
                     {"initialroom", roomItem.second.getRoomId()}  // Default value
             };
             objects.push_back(object);
-            cout << "length of player inventory is: " << gameMap.getPlayer().getObjects().size() << endl;
         }
     }
 
@@ -92,6 +92,7 @@ json formatJson(Map &gameMap) {
     return data;
 }
 
+//read in the map file
 Map jsonParser(string jsonFile) {
     try {
         ifstream fin(jsonFile);
@@ -102,48 +103,59 @@ Map jsonParser(string jsonFile) {
         map<string, Object> objects;
         map<string, Enemy> enemies;
 
+        //if health is found in the json file, it means it has been saved from earlier so use the saved value rather than the default
         int health = 100;
         if (j["player"].contains("health")) {
             health = j["player"]["health"];
         }
 
+        //initialises rooms with a map of strings for exits
         for (auto &room: j["rooms"]) {
             map<string, string> newMap = room["exits"].get<map<string, string>>();
             Room newRoom = Room(room["id"], room["desc"], newMap);
+            //all rooms are added to a map to use in the Map object
             rooms.insert(make_pair(room["id"], newRoom));
         }
 
+        //initialises objects
         int objectId = 1;
         vector<Object> playerObjects;
         for (auto &object: j["objects"]) {
             Object newObject = Object("object" + to_string(objectId), object["id"], object["desc"]);
+            //if an object's initialroom is 'player' then it will be added to the player's inventory. otherwise it is added to the room
             if (object["initialroom"] == "player") {
                 playerObjects.push_back(newObject);
             } else {
                 rooms.at(object["initialroom"]).addObjects(newObject);
             }
+            //all rooms are added to a map to use in the Map object
             objects.insert(make_pair("object" + to_string(objectId), newObject));
             objectId++;
         }
 
+        // initialises enemies
         int enemyId = 1;
         for (auto &enemy: j["enemies"]) {
             vector<string> kills = enemy["killedby"].get<vector<string>>();
             Enemy newEnemy = Enemy("enemy" + to_string(enemyId), enemy["id"], enemy["desc"], enemy["aggressiveness"],
                                    kills);
+            //add the enemy to the room
             rooms.at(enemy["initialroom"]).addEnemies(newEnemy);
             enemies.insert(make_pair("enemy" + to_string(enemyId), newEnemy));
             enemyId++;
         }
 
+        //initialise the player and add objects in the inventory
         Player player = Player(rooms.at(j["player"]["initialroom"]));
         player.setHealth(health);
         for (Object i: playerObjects) {
             player.addObjects(i);
         }
 
+        //initialise the objective
         Objective objective = Objective("objective1", j["objective"]["type"], j["objective"]["what"]);
 
+        //create a Map object to contain all features in the game's map
         Map gameMap = Map(objects, enemies, rooms, player, objective);
         return gameMap;
     } catch (const exception &e) {

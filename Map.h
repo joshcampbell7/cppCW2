@@ -18,21 +18,12 @@ using namespace std;
 class Map {
 
 public:
-    Map(map<string, Object> &objects, map<string, Enemy> &enemies, map<string, Room> &rooms, Player &player, Objective &objective);
-
-    map<string, Object> &getObjects();
-
-    map<string, Enemy> &getEnemies();
+    Map(map<string, Object> &objects, map<string, Enemy> &enemies, map<string, Room> &rooms, Player &player,
+        Objective &objective);
 
     map<string, Room> &getRooms();
 
-    void setObjects(map<string, Object> &objects);
-
-    void setEnemies(map<string, Enemy> &enemies);
-
-    void setRooms(map<string, Room> &rooms);
-
-    Player& getPlayer();
+    Player &getPlayer();
 
     Objective &getObjective();
 

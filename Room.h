@@ -10,9 +10,10 @@
 #include <map>
 #include "Enemy.h"
 #include "Object.h"
+
 using namespace std;
 
-class Room{
+class Room {
 public:
     Room() = default;
 
@@ -24,7 +25,7 @@ public:
 
     const map<string, string> &getExits() const;
 
-    vector<Object> & getObjects();
+    vector<Object> &getObjects();
 
     vector<Enemy> &getEnemies();
 
@@ -36,12 +37,10 @@ public:
 
     void removeEnemies(Enemy &enemy);
 
-    void setObjects(const vector<Object> &objects);
-
 private:
     string roomId;
     string description;
-    map<string,string> exits;
+    map<string, string> exits;
     vector<Object> objects;
     vector<Enemy> enemies;
 };

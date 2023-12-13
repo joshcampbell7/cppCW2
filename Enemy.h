@@ -25,9 +25,10 @@ public:
 
     int getAggressiveness() const;
 
-    vector<string> &getKilledBy() ;
+    vector<string> &getKilledBy();
 
-    bool operator==(const Enemy& other) const {
+    //redefinition of the == operator to allow the find function to be used in the Room class when removing enemies
+    bool operator==(const Enemy &other) const {
         return this->enemyId_ == other.enemyId_;
     }
 

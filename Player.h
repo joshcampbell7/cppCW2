@@ -4,6 +4,7 @@
 
 #ifndef CPPCW2_PLAYER_H
 #define CPPCW2_PLAYER_H
+
 #include <string>
 #include <vector>
 #include "Object.h"
@@ -11,14 +12,15 @@
 
 using namespace std;
 
-class Player{
+class Player {
 public:
 
     explicit Player(Room &currentRoom);
 
-    Room& getCurrentRoom();
+    Room &getCurrentRoom();
 
     int getHealth() const;
+
     void setHealth(int newHealth);
 
     vector<Object> getObjects() const;
