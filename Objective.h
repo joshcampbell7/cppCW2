@@ -7,16 +7,20 @@
 
 #include <string>
 #include <vector>
+
 using namespace std;
 
-class Objective{
+class Objective {
 public:
 
     Objective(const string &objectiveId_, const string &type_, const vector<string> &what_);
 
     string getObjectiveId() const;
+
     string getType() const;
+
     vector<string> getWhat() const;
+
     void removeWhat(string &what);
 
 private:

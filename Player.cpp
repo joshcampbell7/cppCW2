@@ -8,7 +8,7 @@
 
 Player::Player(Room &currentRoom) : currentRoom(currentRoom), health(100), objects() {}
 
-Room& Player::getCurrentRoom() {
+Room &Player::getCurrentRoom() {
     return currentRoom;
 }
 

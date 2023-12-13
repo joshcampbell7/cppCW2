@@ -13,13 +13,15 @@
 
 using namespace std;
 
-string goMethod(const vector<string> &command, Player &player);
+string goMethod(const vector<string> &command, Map &gameMap);
 
-string takeMethod(const vector<string> &command, Player &player);
+string takeMethod(const vector<string> &command, Map &gameMap);
 
-string lookMethod(const vector<string> &command, Player &player);
+string lookMethod(const vector<string> &command, Map &gameMap);
 
-string killMethod(const vector<string> &command, Player &player);
+string killMethod(const vector<string> &command, Map &gameMap);
+
+string saveMethod(const vector<string> &command, Map &gameMap);
 
 void moveHandler(Map &gameMap);
 
