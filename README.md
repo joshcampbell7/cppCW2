@@ -28,6 +28,9 @@ For example to run map1, the command is ``./main map1.json``
 To save game run the command ``save`` in the game terminal, this will save the
 current state of your game in a json file called `saveGame.json`
 
+**Note: When first starting, you won't have a file called `saveGame.json`
+when you first save, it will be created for you.**
+
 ## How to load game
 
 To load game run the command in the terminal ``./main saveGame.json``, this will load the
